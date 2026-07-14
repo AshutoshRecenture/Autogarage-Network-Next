@@ -7,11 +7,34 @@ import TalkToAiLead from "@/models/TalkToAiLead";
 
 export const maxDuration = 30;
 
+async function verifyReCaptcha(token) {
+  if (!token) return false;
+  const secret = process.env.RECAPTCHA_SECRET_KEY || process.env.RECAPRCHA_SECRET_KEY;
+  if (!secret) {
+    console.error("RECAPTCHA_SECRET_KEY is not configured on the frontend server");
+    return false;
+  }
+  try {
+    const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
+    });
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error("Error verifying reCAPTCHA:", error);
+    return false;
+  }
+}
+
 export async function POST(req) {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
     const body = await req.json();
-    const { messages, sessionId, mode = "text" } = body;
+    const { messages, sessionId, mode = "text", captchaToken } = body;
 
     if (!sessionId || !messages || messages.length === 0) {
       return new Response(JSON.stringify({ error: "Invalid request body" }), { status: 400, headers: { "Content-Type": "application/json" } });
@@ -25,6 +48,10 @@ export async function POST(req) {
     // Find or Create Lead
     let lead = await LeadModel.findOne({ sessionId });
     if (!lead) {
+      const isValidCaptcha = await verifyReCaptcha(captchaToken);
+      if (!isValidCaptcha) {
+        return new Response(JSON.stringify({ error: "Invalid or expired Captcha verification. Please try again." }), { status: 400, headers: { "Content-Type": "application/json" } });
+      }
       lead = await LeadModel.create({ sessionId, chatMode: mode });
     }
 

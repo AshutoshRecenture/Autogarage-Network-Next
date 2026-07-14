@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MessageSquare, Mic, ChevronLeft, Send, Square, RotateCcw } from "lucide-react";
 import { useAiChat } from "@/hooks/useAiChat";
+import GoogleReCaptcha from "@/components/common/GoogleReCaptcha";
 
 const servicesList = [
   { name: "Garage Management System", desc: "All-in-one garage workflow software" },
@@ -16,6 +17,10 @@ export default function AiAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [chatMode, setChatMode] = useState(null); // 'text' | 'voice' | null
   const messagesEndRef = useRef(null);
+
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [isRobot, setIsRobot] = useState(true);
+  const recaptchaResetRef = useRef(null);
 
   const {
     messages,
@@ -31,7 +36,14 @@ export default function AiAssistant() {
     selectedService,
     handleServiceSelect,
     resetChat,
-  } = useAiChat(chatMode);
+  } = useAiChat(chatMode, captchaToken);
+
+  const handleResetChat = () => {
+    resetChat();
+    setCaptchaToken("");
+    setIsRobot(true);
+    recaptchaResetRef.current?.();
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -73,6 +85,9 @@ export default function AiAssistant() {
                     onClick={() => {
                       setChatMode(null);
                       stopAudio();
+                      setCaptchaToken("");
+                      setIsRobot(true);
+                      recaptchaResetRef.current?.();
                     }}
                     className="p-1 -ml-2 hover:bg-slate-800 rounded transition-colors text-slate-300"
                     title="Back to options"
@@ -98,7 +113,7 @@ export default function AiAssistant() {
               <div className="flex items-center gap-1">
                 {chatMode && (
                   <button
-                    onClick={resetChat}
+                    onClick={handleResetChat}
                     className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-blue-400"
                     title="Start new conversation"
                   >
@@ -109,7 +124,12 @@ export default function AiAssistant() {
                   onClick={() => {
                     setIsOpen(false);
                     stopAudio();
-                    setTimeout(() => setChatMode(null), 300);
+                    setTimeout(() => {
+                      setChatMode(null);
+                      setCaptchaToken("");
+                      setIsRobot(true);
+                      recaptchaResetRef.current?.();
+                    }, 300);
                   }}
                   className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-300 hover:text-white"
                 >
@@ -126,12 +146,27 @@ export default function AiAssistant() {
               // Mode Selection Screen
               <div className="flex-1 bg-white p-6 flex flex-col items-center justify-center text-center">
                 <h4 className="text-xl font-bold text-slate-800 mb-2">How can we help?</h4>
-                <p className="text-slate-500 text-sm mb-8">Choose how you'd like to interact with our AI Assistant.</p>
+                <p className="text-slate-500 text-sm mb-6">Choose how you'd like to interact with our AI Assistant.</p>
                 
+                <div className="mb-6 flex justify-center scale-90">
+                  <GoogleReCaptcha
+                    onVerify={(token) => {
+                      setCaptchaToken(token);
+                      setIsRobot(false);
+                    }}
+                    onExpired={() => {
+                      setCaptchaToken("");
+                      setIsRobot(true);
+                    }}
+                    resetRef={recaptchaResetRef}
+                  />
+                </div>
+
                 <div className="w-full space-y-4">
                   <button 
                     onClick={() => setChatMode('text')}
-                    className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all group text-left"
+                    disabled={isRobot}
+                    className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all group text-left disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                       <MessageSquare size={24} />
@@ -144,7 +179,8 @@ export default function AiAssistant() {
 
                   <button 
                     onClick={() => setChatMode('voice')}
-                    className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all group text-left"
+                    disabled={isRobot}
+                    className="w-full flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all group text-left disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     <div className="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Mic size={24} />

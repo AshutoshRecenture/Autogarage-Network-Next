@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import GoogleReCaptcha from "@/components/common/GoogleReCaptcha";
 import {
   FaCheckCircle,
   FaTimes,
@@ -100,9 +101,9 @@ export default function WebsiteRegisterPage() {
 
   const [validationErrors, setValidationErrors] = useState({});
   const [captchaToken, setCaptchaToken] = useState("");
-  const [captchaLoading, setCaptchaLoading] = useState(false);
   const [isRobot, setIsRobot] = useState(true);
   const [formInteracted, setFormInteracted] = useState(false);
+  const recaptchaResetRef = useRef(null);
 
   const [submitStatus, setSubmitStatus] = useState({
     loading: false,
@@ -218,31 +219,19 @@ export default function WebsiteRegisterPage() {
     return Object.keys(errors).length === 0;
   };
 
-  const verifyCaptcha = async (e) => {
-    const checked = e.target.checked;
-    if (!checked) {
-      setIsRobot(true);
-      setCaptchaToken("");
-      return;
-    }
+  const handleVerify = (token) => {
+    setCaptchaToken(token);
+    setIsRobot(false);
+    setValidationErrors((prev) => {
+      const next = { ...prev };
+      delete next.captcha;
+      return next;
+    });
+  };
 
-    setCaptchaLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/captcha/token`);
-      const data = await res.json();
-      if (data.token) {
-        setCaptchaToken(data.token);
-        setIsRobot(false);
-      }
-    } catch (error) {
-      console.error("Captcha verification error", error);
-      setValidationErrors((prev) => ({
-        ...prev,
-        captcha: "Could not verify captcha. Please reload page.",
-      }));
-    } finally {
-      setCaptchaLoading(false);
-    }
+  const handleExpired = () => {
+    setCaptchaToken("");
+    setIsRobot(true);
   };
 
   const handleSubmit = async (e) => {
@@ -354,12 +343,14 @@ export default function WebsiteRegisterPage() {
         });
         setIsRobot(true);
         setCaptchaToken("");
+        recaptchaResetRef.current?.();
       } else {
         setSubmitStatus({
           loading: false,
           error: data.message || "Requirement specifier upload failed.",
           success: false,
         });
+        recaptchaResetRef.current?.();
       }
     } catch (err) {
       console.error(err);
@@ -368,6 +359,7 @@ export default function WebsiteRegisterPage() {
         error: "Server connection failed. Please check status and try again.",
         success: false,
       });
+      recaptchaResetRef.current?.();
     }
   };
 
@@ -1257,38 +1249,14 @@ export default function WebsiteRegisterPage() {
 
             {/* Action buttons and Captcha */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mt-10">
-              {/* Captcha checkbox wrapper */}
+              {/* Google reCAPTCHA */}
               {formInteracted ? (
-                <div className="bg-white border border-gray-300 rounded-lg p-3 flex items-center justify-between w-64 select-none shrink-0 shadow-sm">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={!isRobot && !!captchaToken}
-                      onChange={verifyCaptcha}
-                      className="w-4.5 h-4.5 text-[#0062ff] border-gray-300 rounded focus:ring-[#0062ff]"
-                      disabled={captchaLoading}
-                    />
-                    {captchaLoading ? (
-                      <span className="text-xs font-bold text-slate-500 flex items-center gap-2">
-                        <FaSyncAlt className="animate-spin text-[#0062ff] text-xs" /> Verifying...
-                      </span>
-                    ) : (
-                      <span className="text-xs font-bold text-slate-700">
-                        I'm not a robot
-                      </span>
-                    )}
-                  </label>
-
-                  <div className="text-center shrink-0">
-                    <img
-                      src="https://www.gstatic.com/recaptcha/api2/logo_48.png"
-                      alt="reCAPTCHA"
-                      className="w-6.5 h-6.5 mx-auto mb-0.5 object-contain"
-                    />
-                    <span className="text-[7px] text-slate-400 block font-bold leading-none uppercase tracking-tighter">
-                      reCAPTCHA
-                    </span>
-                  </div>
+                <div className="flex justify-start">
+                  <GoogleReCaptcha
+                    onVerify={handleVerify}
+                    onExpired={handleExpired}
+                    resetRef={recaptchaResetRef}
+                  />
                 </div>
               ) : (
                 <div className="w-64 shrink-0" />

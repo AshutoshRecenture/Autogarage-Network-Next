@@ -9,7 +9,7 @@ const submitBooking = async (req, res) => {
     const { name, garageName, email, phone, interestedIn, address, message, captchaToken } =
       req.body || {};
 
-    if (!verifyCaptchaToken(captchaToken)) {
+    if (!(await verifyCaptchaToken(captchaToken))) {
       return res.status(400).json({
         status: false,
         message: "Invalid or expired Captcha verification. Please try again.",

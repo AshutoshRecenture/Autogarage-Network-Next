@@ -60,7 +60,7 @@ const submitWebsiteRegister = async (req, res) => {
     } = req.body || {};
 
     // 1. Verify captcha
-    if (!verifyCaptchaToken(captchaToken)) {
+    if (!(await verifyCaptchaToken(captchaToken))) {
       // Cleanup files if uploaded before rejecting
       if (req.files) {
         Object.keys(req.files).forEach((key) => {

@@ -5,21 +5,21 @@ export default function Footer() {
   return (
     <footer className="relative text-gray-300 font-sans">
       {/* Background Image & Overlay */}
-      <div 
-        className="absolute inset-0 z-0 bg-[url('/images/slide-1.png')] bg-cover bg-center bg-no-repeat"
-      />
+      <div className="absolute inset-0 z-0 bg-[url('/images/slide-1.png')] bg-cover bg-center bg-no-repeat" />
       <div className="absolute inset-0 z-0 bg-black/85" />
-      
+
       {/* Footer Content */}
       <div className="relative z-10 pt-16 pb-8">
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Main Footer Content */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 mb-12">
-            
             {/* Column 1: About */}
             <div className="lg:col-span-1">
               <div className="mb-6">
-                <Link href="/" className="inline-flex items-center justify-center bg-white px-4 py-2.5 rounded-xl hover:bg-white/95 transition duration-200 shadow-sm border border-slate-100">
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center bg-white px-4 py-2.5 rounded-xl hover:bg-white/95 transition duration-200 shadow-sm border border-slate-100"
+                >
                   <Image
                     src="/images/logo-color.png"
                     alt="Auto Garage Network Logo"
@@ -30,7 +30,10 @@ export default function Footer() {
                 </Link>
               </div>
               <p className="text-[14px] leading-relaxed text-gray-400">
-                Take full control of your garage operations with our system. Manage your customers, optimise pricing, oversee employee tasks, track inventory, and access real-time revenue reports-all seamlessly and hassle-free!
+                Take full control of your garage operations with our system.
+                Manage your customers, optimise pricing, oversee employee tasks,
+                track inventory, and access real-time revenue reports-all
+                seamlessly and hassle-free!
               </p>
             </div>
 
@@ -42,7 +45,7 @@ export default function Footer() {
               <ul className="flex flex-col gap-2">
                 {[
                   { name: "Home", href: "/" },
-                  { name: "About Us", href: "/about-us" },
+                  { name: "About Us", href: "/about" },
                   { name: "Contact Us", href: "/contact-us" },
                   { name: "Career", href: "/career" },
                   { name: "Sitemap", href: "/sitemap" },
@@ -52,7 +55,10 @@ export default function Footer() {
                   { name: "Terms & Conditions", href: "/terms" },
                 ].map((link, idx) => (
                   <li key={idx}>
-                    <Link href={link.href} className="text-[14px] text-gray-400 hover:text-white transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-[14px] text-gray-400 hover:text-white transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -73,7 +79,10 @@ export default function Footer() {
                   { name: "Automotive", href: "#" },
                 ].map((link, idx) => (
                   <li key={idx}>
-                    <Link href={link.href} className="text-[14px] text-gray-400 hover:text-white transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-[14px] text-gray-400 hover:text-white transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -91,11 +100,17 @@ export default function Footer() {
                   { name: "MOT Diary", href: "#" },
                   { name: "SEO", href: "/seo" },
                   { name: "Website Register (WRF)", href: "/websiteregister" },
-                  { name: "Website Register with Contract", href: "/websiteregister" },
+                  {
+                    name: "Website Register with Contract",
+                    href: "/websiteregister",
+                  },
                   { name: "Products & Services Price", href: "/pricing" },
                 ].map((link, idx) => (
                   <li key={idx}>
-                    <Link href={link.href} className="text-[14px] text-gray-400 hover:text-white transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-[14px] text-gray-400 hover:text-white transition-colors"
+                    >
                       {link.name}
                     </Link>
                   </li>
@@ -108,42 +123,57 @@ export default function Footer() {
               <h3 className="text-white text-[13px] font-bold tracking-widest uppercase mb-6 pb-2 border-b border-gray-600 inline-block w-full">
                 Contact Information
               </h3>
-              
+
               <div className="flex flex-col gap-5">
                 <div>
-                  <p className="text-white text-[13px] font-semibold mb-1">Address:</p>
+                  <p className="text-white text-[13px] font-semibold mb-1">
+                    Address:
+                  </p>
                   <p className="text-[14px] text-gray-400 leading-relaxed">
-                    The Chestnuts, 46 Middle Lane,<br />
+                    The Chestnuts, 46 Middle Lane,
+                    <br />
                     Nether Broughton, LE14 3HD
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-white text-[13px] font-semibold mb-1">Sales Inquiry:</p>
-                  <a href="tel:07947906789" className="block text-[14px] text-gray-400 hover:text-white transition-colors mb-0.5">
+                  <p className="text-white text-[13px] font-semibold mb-1">
+                    Sales Inquiry:
+                  </p>
+                  <a
+                    href="tel:07947906789"
+                    className="block text-[14px] text-gray-400 hover:text-white transition-colors mb-0.5"
+                  >
                     07947 906789
                   </a>
-                  <a href="mailto:info@autogaragenetwork.com" className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors break-words">
+                  <a
+                    href="mailto:info@autogaragenetwork.com"
+                    className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors break-words"
+                  >
                     info@autogaragenetwork.com
                   </a>
                 </div>
 
                 <div>
-                  <p className="text-white text-[13px] font-semibold mb-1">Customer Support:</p>
-                  <a href="tel:01702655556" className="block text-[14px] text-gray-400 hover:text-white transition-colors mb-0.5">
+                  <p className="text-white text-[13px] font-semibold mb-1">
+                    Customer Support:
+                  </p>
+                  <a
+                    href="tel:01702655556"
+                    className="block text-[14px] text-gray-400 hover:text-white transition-colors mb-0.5"
+                  >
                     01702 655556
                   </a>
-                  <a href="mailto:jatindersingh@autogaragenetwork.com" className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors break-words">
+                  <a
+                    href="mailto:jatindersingh@autogaragenetwork.com"
+                    className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors break-words"
+                  >
                     jatindersingh@autogaragenetwork.com
                   </a>
                 </div>
               </div>
             </div>
-
           </div>
-
-
-
         </div>
       </div>
     </footer>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export function useAiChat(chatMode) {
+export function useAiChat(chatMode, captchaToken) {
   const [sessionId, setSessionId] = useState("");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -90,7 +90,7 @@ export function useAiChat(chatMode) {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages, sessionId, mode: chatMode }),
+        body: JSON.stringify({ messages: newMessages, sessionId, mode: chatMode, captchaToken }),
       });
 
       if (!res.ok) {

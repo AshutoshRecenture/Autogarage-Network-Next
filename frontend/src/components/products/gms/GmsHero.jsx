@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaCheckCircle, FaUser, FaBuilding, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaSyncAlt, FaTimes, FaChevronDown, FaClipboardList } from "react-icons/fa";
+import GoogleReCaptcha from "@/components/common/GoogleReCaptcha";
 
 export default function GmsHero() {
   const [formData, setFormData] = useState({
@@ -15,9 +16,9 @@ export default function GmsHero() {
   });
 
   const [captchaToken, setCaptchaToken] = useState("");
-  const [captchaLoading, setCaptchaLoading] = useState(false);
   const [isRobot, setIsRobot] = useState(true);
   const [formInteracted, setFormInteracted] = useState(false);
+  const recaptchaResetRef = useRef(null);
 
   const [status, setStatus] = useState({
     loading: false,
@@ -32,27 +33,14 @@ export default function GmsHero() {
     }
   };
 
-  const verifyCaptcha = async (e) => {
-    const checked = e.target.checked;
-    if (!checked) {
-      setIsRobot(true);
-      setCaptchaToken("");
-      return;
-    }
+  const handleVerify = (token) => {
+    setCaptchaToken(token);
+    setIsRobot(false);
+  };
 
-    setCaptchaLoading(true);
-    try {
-      const res = await fetch("http://localhost:5000/api/captcha/token");
-      const data = await res.json();
-      if (data.token) {
-        setCaptchaToken(data.token);
-        setIsRobot(false);
-      }
-    } catch (error) {
-      console.error("Captcha verification failed", error);
-    } finally {
-      setCaptchaLoading(false);
-    }
+  const handleExpired = () => {
+    setCaptchaToken("");
+    setIsRobot(true);
   };
 
   const handleSubmit = async (e) => {
@@ -96,12 +84,14 @@ export default function GmsHero() {
         setIsRobot(true);
         setCaptchaToken("");
         setFormInteracted(false);
+        recaptchaResetRef.current?.();
       } else {
         setStatus({
           loading: false,
           error: data.message || "Something went wrong.",
           success: false,
         });
+        recaptchaResetRef.current?.();
       }
     } catch (error) {
       setStatus({
@@ -109,6 +99,7 @@ export default function GmsHero() {
         error: "Network error. Please try again.",
         success: false,
       });
+      recaptchaResetRef.current?.();
     }
   };
 
@@ -281,27 +272,14 @@ export default function GmsHero() {
                 <textarea name="message" value={formData.message} onChange={handleChange} rows="3" className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none" placeholder="How can we help you?"></textarea>
               </div>
               
-              {/* Functional reCAPTCHA Mock */}
+              {/* Google reCAPTCHA */}
               {formInteracted && (
-                <div className="bg-white p-3 rounded-lg flex items-center justify-between border border-gray-200 shadow-sm mt-2">
-                  <div className="flex items-center gap-3">
-                    {captchaLoading ? (
-                      <FaSyncAlt className="text-blue-500 animate-spin w-6 h-6" />
-                    ) : (
-                      <input 
-                        type="checkbox" 
-                        checked={!isRobot}
-                        onChange={verifyCaptcha}
-                        className="w-7 h-7 border-gray-300 rounded shadow-inner cursor-pointer accent-blue-600 hover:ring-2 hover:ring-blue-100 transition-all" 
-                      />
-                    )}
-                    <span className="text-[14px] font-medium text-gray-700 mt-0.5">I'm not a robot</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center opacity-80">
-                    <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA" className="w-8 h-8 mb-1 object-contain" />
-                    <div className="text-[10px] text-gray-500 font-medium leading-none">reCAPTCHA</div>
-                    <div className="text-[8px] text-gray-400 mt-1">Privacy - Terms</div>
-                  </div>
+                <div className="mt-2 flex justify-center sm:justify-start">
+                  <GoogleReCaptcha
+                    onVerify={handleVerify}
+                    onExpired={handleExpired}
+                    resetRef={recaptchaResetRef}
+                  />
                 </div>
               )}
 

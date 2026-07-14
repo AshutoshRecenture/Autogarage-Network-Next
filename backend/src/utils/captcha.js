@@ -22,33 +22,38 @@ const createCaptchaToken = () => {
 };
 
 /**
- * Verify a captcha token
+ * Verify a captcha token with Google reCAPTCHA
  * @param {string} token 
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
-const verifyCaptchaToken = (token) => {
+const verifyCaptchaToken = async (token) => {
   if (!token) return false;
   
-  const parts = token.split(".");
-  if (parts.length !== 3) return false;
-  
-  const [expiryStr, salt, signature] = parts;
-  const expiry = parseInt(expiryStr, 10);
-  
-  if (isNaN(expiry) || Date.now() > expiry) {
-    return false; // Expired
+  const secret = process.env.RECAPTCHA_SECRET_KEY || process.env.RECAPRCHA_SECRET_KEY;
+  if (!secret) {
+    console.error("reCAPTCHA secret key is missing in environment variables.");
+    return false;
   }
   
-  const secret = process.env.JWT_SECRET || "supersecretjwtkeyagnkey123";
-  const expectedSignature = crypto
-    .createHmac("sha256", secret)
-    .update(`${expiryStr}.${salt}`)
-    .digest("hex");
+  try {
+    const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
+    });
     
-  return signature === expectedSignature;
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error("Error verifying reCAPTCHA token with Google:", error);
+    return false;
+  }
 };
 
 module.exports = {
   createCaptchaToken,
   verifyCaptchaToken,
 };
+

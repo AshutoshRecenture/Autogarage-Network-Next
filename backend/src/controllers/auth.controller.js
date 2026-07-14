@@ -52,7 +52,7 @@ const authUser = async (req, res) => {
   try {
     const { email, password, captchaToken } = req.body || {};
 
-    if (!verifyCaptchaToken(captchaToken)) {
+    if (!(await verifyCaptchaToken(captchaToken))) {
       return res
         .status(400)
         .json({ message: "Invalid or expired Captcha verification. Please try again." });

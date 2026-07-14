@@ -18,7 +18,7 @@ const submitContact = async (req, res) => {
       captchaToken,
     } = req.body || {};
 
-    if (!verifyCaptchaToken(captchaToken)) {
+    if (!(await verifyCaptchaToken(captchaToken))) {
       return res.status(400).json({
         status: false,
         message: "Invalid or expired Captcha verification. Please try again.",

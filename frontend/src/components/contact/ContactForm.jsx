@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaSyncAlt, FaCheckCircle, FaTimes } from "react-icons/fa";
+import GoogleReCaptcha from "@/components/common/GoogleReCaptcha";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -13,9 +14,9 @@ export default function ContactForm() {
   });
 
   const [captchaToken, setCaptchaToken] = useState("");
-  const [captchaLoading, setCaptchaLoading] = useState(false);
   const [isRobot, setIsRobot] = useState(true);
   const [formInteracted, setFormInteracted] = useState(false);
+  const recaptchaResetRef = useRef(null);
 
   const [status, setStatus] = useState({
     loading: false,
@@ -30,27 +31,14 @@ export default function ContactForm() {
     }
   };
 
-  const verifyCaptcha = async (e) => {
-    const checked = e.target.checked;
-    if (!checked) {
-      setIsRobot(true);
-      setCaptchaToken("");
-      return;
-    }
+  const handleVerify = (token) => {
+    setCaptchaToken(token);
+    setIsRobot(false);
+  };
 
-    setCaptchaLoading(true);
-    try {
-      const res = await fetch("http://localhost:5000/api/captcha/token");
-      const data = await res.json();
-      if (data.token) {
-        setCaptchaToken(data.token);
-        setIsRobot(false);
-      }
-    } catch (error) {
-      console.error("Captcha verification failed", error);
-    } finally {
-      setCaptchaLoading(false);
-    }
+  const handleExpired = () => {
+    setCaptchaToken("");
+    setIsRobot(true);
   };
 
   const handleSubmit = async (e) => {
@@ -83,12 +71,14 @@ export default function ContactForm() {
         setIsRobot(true);
         setCaptchaToken("");
         setFormInteracted(false);
+        recaptchaResetRef.current?.();
       } else {
         setStatus({
           loading: false,
           error: data.message || "Something went wrong.",
           success: false,
         });
+        recaptchaResetRef.current?.();
       }
     } catch (error) {
       setStatus({
@@ -96,6 +86,7 @@ export default function ContactForm() {
         error: "Network error. Please try again.",
         success: false,
       });
+      recaptchaResetRef.current?.();
     }
   };
 
@@ -235,32 +226,14 @@ export default function ContactForm() {
           ></textarea>
         </div>
 
-        {/* reCAPTCHA Mock */}
+        {/* Google reCAPTCHA */}
         {formInteracted && (
-          <div className="inline-flex items-center gap-4 bg-slate-50 border border-slate-200 p-4 rounded-lg">
-            <div className="flex items-center gap-3">
-              {captchaLoading ? (
-                <FaSyncAlt className="text-blue-500 animate-spin" />
-              ) : (
-                <input
-                  type="checkbox"
-                  checked={!isRobot}
-                  onChange={verifyCaptcha}
-                  className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                />
-              )}
-              <span className="text-sm font-medium text-slate-700">
-                I'm not a robot
-              </span>
-            </div>
-            <div className="pl-6 border-l border-slate-200 flex flex-col items-center">
-              <img
-                src="https://www.gstatic.com/recaptcha/api2/logo_48.png"
-                alt="reCAPTCHA"
-                className="w-8"
-              />
-              <span className="text-[9px] text-slate-500 mt-1">reCAPTCHA</span>
-            </div>
+          <div className="flex justify-start">
+            <GoogleReCaptcha
+              onVerify={handleVerify}
+              onExpired={handleExpired}
+              resetRef={recaptchaResetRef}
+            />
           </div>
         )}
 

@@ -77,36 +77,55 @@ export default function Navbar() {
                   key={index}
                   className="relative group h-24 flex items-center"
                 >
-                  <div className={`flex items-center gap-1.5 cursor-pointer text-[15px] font-bold transition ${pathname.startsWith(item.href) ? 'text-[#1EA1F1]' : 'text-black group-hover:text-[#1EA1F1]'}`}>
+                  <div
+                    className={`flex items-center gap-1.5 cursor-pointer text-[15px] font-bold transition ${pathname.startsWith(item.href) ? "text-[#1EA1F1]" : "text-black group-hover:text-[#1EA1F1]"}`}
+                  >
                     {item.name}
-                    <FaChevronDown size={10} className="mt-0.5 opacity-70 group-hover:rotate-180 transition-transform duration-200" />
+                    <FaChevronDown
+                      size={10}
+                      className="mt-0.5 opacity-70 group-hover:rotate-180 transition-transform duration-200"
+                    />
                   </div>
-                  
+
                   {/* Dropdown Menu */}
                   <div className="absolute top-[85px] left-0 w-[260px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform group-hover:-translate-y-2 origin-top translate-y-0 flex flex-col py-2">
-                    <Link href="/products/gms" className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition">
+                    <Link
+                      href="/products/gms"
+                      className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition"
+                    >
                       Garage Management System
                     </Link>
-                    <Link href="/products/website" className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition">
+                    <Link
+                      href="/products/website"
+                      className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition"
+                    >
                       Website for Garages
                     </Link>
-                    <a href="https://www.autotechdata.co.uk/" target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition block">
+                    <a
+                      href="https://www.autotechdata.co.uk/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition block"
+                    >
                       Autotech Data
                     </a>
-                    <Link href="/products/mot-diary" className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition">
+                    <Link
+                      href="/products/mot-diary"
+                      className="px-6 py-3 text-[15px] text-black font-medium hover:text-[#1EA1F1] hover:bg-blue-50/50 transition"
+                    >
                       MOT Diary
                     </Link>
                   </div>
                 </div>
               );
             }
-            
+
             // Normal text
             return (
               <Link
                 key={index}
                 href={item.href}
-                className={`text-[15px] font-bold transition hover:text-[#1EA1F1] ${pathname === item.href ? 'text-[#1EA1F1]' : 'text-black'}`}
+                className={`text-[15px] font-bold transition hover:text-[#1EA1F1] ${pathname === item.href ? "text-[#1EA1F1]" : "text-black"}`}
               >
                 {item.name}
               </Link>
@@ -116,19 +135,49 @@ export default function Navbar() {
 
         {/* Social (Desktop) */}
         <div className="hidden items-center gap-5 lg:flex">
-          <a href="https://www.facebook.com/autogaragenetworkltd" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-slate-800 hover:text-[#1EA1F1] transition">
+          <a
+            href="https://www.facebook.com/autogaragenetworkltd"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="text-slate-800 hover:text-[#1EA1F1] transition"
+          >
             <FaFacebookF className="text-xl" />
           </a>
-          <a href="https://www.linkedin.com/company/auto-garage-network-ltd" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-slate-800 hover:text-[#1EA1F1] transition">
+          <a
+            href="https://www.linkedin.com/company/auto-garage-network-ltd"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="text-slate-800 hover:text-[#1EA1F1] transition"
+          >
             <FaLinkedinIn className="text-xl" />
           </a>
-          <a href="https://www.instagram.com/autogaragenetworkltd.uk" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-slate-800 hover:text-[#1EA1F1] transition">
+          <a
+            href="https://www.instagram.com/autogaragenetworkltd.uk"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="text-slate-800 hover:text-[#1EA1F1] transition"
+          >
             <FaInstagram className="text-xl" />
           </a>
-          <a href="https://twitter.com/autogaragent" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-slate-800 hover:text-[#1EA1F1] transition">
+          <a
+            href="https://twitter.com/autogaragent"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter"
+            className="text-slate-800 hover:text-[#1EA1F1] transition"
+          >
             <FaTwitter className="text-xl" />
           </a>
-          <a href="https://www.youtube.com/channel/UCT8JroOu-4_KT74be6tGUoQ" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-slate-800 hover:text-[#1EA1F1] transition">
+          <a
+            href="https://www.youtube.com/channel/UCT8JroOu-4_KT74be6tGUoQ"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+            className="text-slate-800 hover:text-[#1EA1F1] transition"
+          >
             <FaYoutube className="text-xl" />
           </a>
         </div>
@@ -158,7 +207,9 @@ export default function Navbar() {
                 return (
                   <div key={index} className="flex flex-col">
                     <button
-                      onClick={() => setIsProductsDropdownOpen(!isProductsDropdownOpen)}
+                      onClick={() =>
+                        setIsProductsDropdownOpen(!isProductsDropdownOpen)
+                      }
                       className={`flex items-center justify-between w-full py-2.5 text-base font-bold transition text-left ${
                         pathname.startsWith(item.href)
                           ? "text-[#1EA1F1]"
@@ -284,4 +335,3 @@ export default function Navbar() {
     </header>
   );
 }
-
