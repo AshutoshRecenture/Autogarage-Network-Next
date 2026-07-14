@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaCheckCircle, FaPhoneAlt, FaArrowRight } from 'react-icons/fa';
+import React from "react";
+import { FaCheckCircle, FaPhoneAlt, FaArrowRight } from "react-icons/fa";
 
 export default function WhyChooseUs() {
   return (
@@ -24,9 +24,9 @@ export default function WhyChooseUs() {
             <div className="absolute inset-0 bg-gradient-to-tr from-blue-200 to-indigo-100 rounded-[40px] transform -rotate-3 scale-105 -z-10 blur-sm transition-transform duration-500 group-hover:rotate-0 group-hover:scale-100"></div>
             <div className="bg-white rounded-[40px] p-8 shadow-2xl shadow-slate-200/50 border border-white">
               {/* Using a placeholder image path. User can swap with their specific illustration */}
-              <img 
-                src="/images/slide-3.png" 
-                alt="Why Choose Auto Garage Network" 
+              <img
+                src="/images/slide-3.png"
+                alt="Why Choose Auto Garage Network"
                 className="w-full h-auto object-contain transform transition-transform duration-700 group-hover:scale-[1.03]"
               />
             </div>
@@ -42,7 +42,13 @@ export default function WhyChooseUs() {
                   </div>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[16px] flex-1">
-                  At <span className="font-bold text-slate-900">Auto Garage Network</span>, we know the automotive industry inside and out. With years of experience, we understand what works and the challenges garage owners face.
+                  At{" "}
+                  <span className="font-bold text-slate-900">
+                    Auto Garage Network
+                  </span>
+                  , we know the automotive industry inside and out. With years
+                  of experience, we understand what works and the challenges
+                  garage owners face.
                 </p>
               </li>
               <li className="flex gap-4 group">
@@ -52,7 +58,13 @@ export default function WhyChooseUs() {
                   </div>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[16px] flex-1">
-                  Our garage management software eliminates common problems, increases efficiency and increases profitability. Many clients in the UK have seen <span className="font-bold text-blue-600 bg-blue-50 px-2 rounded">2,000% ROI</span> with our solutions.
+                  Our garage management software eliminates common problems,
+                  increases efficiency and increases profitability. Many clients
+                  in the UK have seen{" "}
+                  <span className="font-bold text-blue-600 bg-blue-50 px-2 rounded">
+                    2,000% ROI
+                  </span>{" "}
+                  with our solutions.
                 </p>
               </li>
               <li className="flex gap-4 group">
@@ -62,21 +74,24 @@ export default function WhyChooseUs() {
                   </div>
                 </div>
                 <p className="text-slate-600 leading-relaxed text-[16px] flex-1">
-                  We help your business stand out, boost sales, manage customer relationships, and retain customers.
+                  We help your business stand out, boost sales, manage customer
+                  relationships, and retain customers.
                 </p>
               </li>
             </ul>
 
             <div className="bg-white rounded-2xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group hover:border-blue-200 transition-colors duration-300">
               <div className="absolute top-0 left-0 w-2 h-full bg-blue-600"></div>
-              
+
               <h4 className="text-xl font-bold text-slate-900 mb-3">
                 Are you interested?
               </h4>
               <p className="text-slate-600 text-[15px] leading-relaxed mb-6">
-                Call us today to speak with our expert. We'll be happy to answer questions and host an on-site demonstration to show how we can transform your garage.
+                Call us today to speak with our expert. We'll be happy to answer
+                questions and host an on-site demonstration to show how we can
+                transform your garage.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <button className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-md shadow-blue-600/20 hover:shadow-lg hover:-translate-y-0.5">
                   <FaPhoneAlt />
@@ -87,7 +102,6 @@ export default function WhyChooseUs() {
                 </span>
               </div>
             </div>
-
           </div>
         </div>
       </div>

@@ -13,15 +13,22 @@ export default function Footer() {
       {/* Footer Content */}
       <div className="relative z-10 pt-16 pb-8">
         <div className="max-w-[1400px] mx-auto px-6">
-          
           {/* Main Footer Content */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 mb-12">
             
             {/* Column 1: About */}
             <div className="lg:col-span-1">
-              <h3 className="text-white text-[13px] font-bold tracking-widest uppercase mb-6 pb-2 border-b border-gray-600 inline-block w-full">
-                Auto Garage Network
-              </h3>
+              <div className="mb-6">
+                <Link href="/" className="inline-flex items-center justify-center bg-white px-4 py-2.5 rounded-xl hover:bg-white/95 transition duration-200 shadow-sm border border-slate-100">
+                  <Image
+                    src="/images/logo-color.png"
+                    alt="Auto Garage Network Logo"
+                    width={160}
+                    height={60}
+                    className="w-36 h-auto object-contain"
+                  />
+                </Link>
+              </div>
               <p className="text-[14px] leading-relaxed text-gray-400">
                 Take full control of your garage operations with our system. Manage your customers, optimise pricing, oversee employee tasks, track inventory, and access real-time revenue reports-all seamlessly and hassle-free!
               </p>

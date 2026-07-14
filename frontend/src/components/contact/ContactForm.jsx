@@ -15,6 +15,7 @@ export default function ContactForm() {
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaLoading, setCaptchaLoading] = useState(false);
   const [isRobot, setIsRobot] = useState(true);
+  const [formInteracted, setFormInteracted] = useState(false);
 
   const [status, setStatus] = useState({
     loading: false,
@@ -24,6 +25,9 @@ export default function ContactForm() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (!formInteracted) {
+      setFormInteracted(true);
+    }
   };
 
   const verifyCaptcha = async (e) => {
@@ -78,6 +82,7 @@ export default function ContactForm() {
         });
         setIsRobot(true);
         setCaptchaToken("");
+        setFormInteracted(false);
       } else {
         setStatus({
           loading: false,
@@ -231,31 +236,33 @@ export default function ContactForm() {
         </div>
 
         {/* reCAPTCHA Mock */}
-        <div className="inline-flex items-center gap-4 bg-slate-50 border border-slate-200 p-4 rounded-lg">
-          <div className="flex items-center gap-3">
-            {captchaLoading ? (
-              <FaSyncAlt className="text-blue-500 animate-spin" />
-            ) : (
-              <input
-                type="checkbox"
-                checked={!isRobot}
-                onChange={verifyCaptcha}
-                className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+        {formInteracted && (
+          <div className="inline-flex items-center gap-4 bg-slate-50 border border-slate-200 p-4 rounded-lg">
+            <div className="flex items-center gap-3">
+              {captchaLoading ? (
+                <FaSyncAlt className="text-blue-500 animate-spin" />
+              ) : (
+                <input
+                  type="checkbox"
+                  checked={!isRobot}
+                  onChange={verifyCaptcha}
+                  className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                />
+              )}
+              <span className="text-sm font-medium text-slate-700">
+                I'm not a robot
+              </span>
+            </div>
+            <div className="pl-6 border-l border-slate-200 flex flex-col items-center">
+              <img
+                src="https://www.gstatic.com/recaptcha/api2/logo_48.png"
+                alt="reCAPTCHA"
+                className="w-8"
               />
-            )}
-            <span className="text-sm font-medium text-slate-700">
-              I'm not a robot
-            </span>
+              <span className="text-[9px] text-slate-500 mt-1">reCAPTCHA</span>
+            </div>
           </div>
-          <div className="pl-6 border-l border-slate-200 flex flex-col items-center">
-            <img
-              src="https://www.gstatic.com/recaptcha/api2/logo_48.png"
-              alt="reCAPTCHA"
-              className="w-8"
-            />
-            <span className="text-[9px] text-slate-500 mt-1">reCAPTCHA</span>
-          </div>
-        </div>
+        )}
 
         {/* Submit Button */}
         <div>

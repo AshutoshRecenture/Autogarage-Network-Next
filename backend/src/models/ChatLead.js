@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const chatLeadSchema = new mongoose.Schema(
   {
@@ -22,8 +22,5 @@ const chatLeadSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-if (mongoose.models.ChatLead) {
-  delete mongoose.models.ChatLead;
-}
-const ChatLead = mongoose.model("ChatLead", chatLeadSchema);
-export default ChatLead;
+const ChatLead = mongoose.models.ChatLead || mongoose.model("ChatLead", chatLeadSchema);
+module.exports = ChatLead;

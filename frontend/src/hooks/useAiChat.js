@@ -8,19 +8,13 @@ export function useAiChat(chatMode) {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const audioRef = useRef(null);
   const recognitionRef = useRef(null);
   const initialized = useRef(false);
 
-  useEffect(() => {
-    let storedSessionId = localStorage.getItem("ai_session_id");
-    if (!storedSessionId) {
-      storedSessionId = uuidv4();
-      localStorage.setItem("ai_session_id", storedSessionId);
-    }
-    setSessionId(storedSessionId);
-  }, []);
+  // Session ID is generated dynamically when chatMode is selected
 
   const handleInputChange = useCallback((e) => {
     setInput(e.target.value);
@@ -109,6 +103,12 @@ export function useAiChat(chatMode) {
         throw new Error(errorMsg);
       }
 
+      // Sync selected service from response header
+      const serviceHeader = res.headers.get("X-Selected-Service");
+      if (serviceHeader) {
+        setSelectedService(serviceHeader);
+      }
+
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let assistantContent = "";
@@ -138,6 +138,11 @@ export function useAiChat(chatMode) {
     sendMessage(input);
   }, [input, sessionId, messages, chatMode]);
 
+  const handleServiceSelect = useCallback((serviceName) => {
+    setSelectedService(serviceName);
+    sendMessage(serviceName);
+  }, [sessionId, messages, chatMode]);
+
   const toggleListening = useCallback(() => {
     if (isListening) {
       recognitionRef.current?.stop();
@@ -155,7 +160,12 @@ export function useAiChat(chatMode) {
   useEffect(() => {
     if (chatMode && !initialized.current) {
       initialized.current = true;
-      const initialGreeting = "Hello! I'm the Auto Garage Network Assistant. To best help you today, could you please tell me a bit about what you're looking for, along with your full name?";
+      
+      // Generate a fresh session ID for this specific interaction
+      const newSessionId = uuidv4();
+      setSessionId(newSessionId);
+      
+      const initialGreeting = "Hello! How can I help you today?";
       
       const asstId = uuidv4();
       setMessages([{ id: asstId, role: "assistant", content: initialGreeting }]);
@@ -167,6 +177,7 @@ export function useAiChat(chatMode) {
       // Reset if mode is cleared
       initialized.current = false;
       setMessages([]);
+      setSelectedService(null);
       stopAudio();
       setIsListening(false);
       recognitionRef.current?.stop();
@@ -196,6 +207,31 @@ export function useAiChat(chatMode) {
     }
   }, [sessionId, messages, chatMode]);
 
+  const resetChat = useCallback(() => {
+    // Stop any ongoing audio/speech
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+    setIsPlaying(false);
+    try { recognitionRef.current?.abort(); } catch(e) {}
+    setIsListening(false);
+
+    // Reset state and generate a fresh session
+    const newSessionId = uuidv4();
+    setSessionId(newSessionId);
+    setSelectedService(null);
+    setInput("");
+
+    const initialGreeting = "Hello! How can I help you today?";
+    const asstId = uuidv4();
+    setMessages([{ id: asstId, role: "assistant", content: initialGreeting }]);
+
+    if (chatMode === "voice") {
+      playAudioResponse(initialGreeting, true);
+    }
+  }, [chatMode]);
+
   return {
     messages,
     input,
@@ -208,5 +244,9 @@ export function useAiChat(chatMode) {
     stopAudio,
     setInput,
     audioRef,
+    selectedService,
+    setSelectedService,
+    handleServiceSelect,
+    resetChat,
   };
 }

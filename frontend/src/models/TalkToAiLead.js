@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
-const chatLeadSchema = new mongoose.Schema(
+const talkToAiLeadSchema = new mongoose.Schema(
   {
     sessionId: { type: String, required: true },
-    chatMode: { type: String, enum: ["text", "voice"], default: "text" },
+    chatMode: { type: String, enum: ["text", "voice"], default: "voice" },
     selectedService: { type: String },
     fullName: { type: String },
     email: { type: String },
@@ -22,8 +22,8 @@ const chatLeadSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-if (mongoose.models.ChatLead) {
-  delete mongoose.models.ChatLead;
+if (mongoose.models.TalkToAiLead) {
+  delete mongoose.models.TalkToAiLead;
 }
-const ChatLead = mongoose.model("ChatLead", chatLeadSchema);
-export default ChatLead;
+const TalkToAiLead = mongoose.model("TalkToAiLead", talkToAiLeadSchema);
+export default TalkToAiLead;

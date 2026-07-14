@@ -70,7 +70,6 @@ export default function SoftwareDetails() {
         {/* Unified System & Core Features Grid */}
         <div className="mb-28">
           <div className="text-center mb-14">
-           
             <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
               A Unified Platform for Every Aspect of Your Business
             </h3>
@@ -130,9 +129,7 @@ export default function SoftwareDetails() {
         {/* Smarter Operations - Bento Style */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-28">
           <div className="lg:col-span-5 flex flex-col justify-center">
-            <div className="mb-4">
-              
-            </div>
+            <div className="mb-4"></div>
             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
               Smarter Operations, <br />
               <span className="text-blue-600">Clearer Decisions</span>
@@ -191,7 +188,6 @@ export default function SoftwareDetails() {
         {/* Boosting Workshop */}
         <div className="mb-12">
           <div className="text-center mb-14">
-            
             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
               Boosting Workshop Beyond Front Desk
             </h3>

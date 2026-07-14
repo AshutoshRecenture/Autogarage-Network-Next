@@ -10,7 +10,7 @@ export default function Portfolio() {
       location: "LONDON, UK",
       image: "/images/portfolio-1.png",
       color: "bg-[#2563eb]", // Blue
-      tags: ["Tyre Fitting", "MOT & Services", "Instant Reg Quote"]
+      tags: ["Tyre Fitting", "MOT & Services", "Instant Reg Quote"],
     },
     {
       id: 2,
@@ -18,7 +18,7 @@ export default function Portfolio() {
       location: "ROTHERHAM, UK",
       image: "/images/portfolio-2.png",
       color: "bg-[#064e3b]", // Dark Green
-      tags: ["Wheel Alignment", "Mobile Tyre Fitting", "Live Slot Scheduler"]
+      tags: ["Wheel Alignment", "Mobile Tyre Fitting", "Live Slot Scheduler"],
     },
     {
       id: 3,
@@ -26,8 +26,8 @@ export default function Portfolio() {
       location: "BIRMINGHAM, UK",
       image: "/images/video-2.png", // Using the dark tech image as third mockup
       color: "bg-[#991b1b]", // Dark Red
-      tags: ["MOT & Servicing", "Brakes & Exhausts", "E-Commerce System"]
-    }
+      tags: ["MOT & Servicing", "Brakes & Exhausts", "E-Commerce System"],
+    },
   ];
 
   return (
@@ -41,18 +41,21 @@ export default function Portfolio() {
             See Our Digital Showroom
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Explore the high-performance websites and booking systems we've built for independent garages across the UK.
+            Explore the high-performance websites and booking systems we've
+            built for independent garages across the UK.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {portfolios.map((item) => (
-            <div 
-              key={item.id} 
+            <div
+              key={item.id}
               className="flex flex-col rounded-3xl overflow-hidden bg-white group hover:-translate-y-2 transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.3)]"
             >
               {/* Card Header */}
-              <div className={`${item.color} px-6 py-5 flex items-center justify-between relative overflow-hidden`}>
+              <div
+                className={`${item.color} px-6 py-5 flex items-center justify-between relative overflow-hidden`}
+              >
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative z-10 flex items-center gap-2">
                   <span className="px-3 py-1 bg-black/20 rounded-full text-xs font-bold tracking-wider text-white uppercase border border-white/10 backdrop-blur-md">
@@ -76,8 +79,8 @@ export default function Portfolio() {
                   </div>
                   {/* Website Image */}
                   <div className="relative h-[200px] w-full overflow-hidden">
-                    <img 
-                      src={item.image} 
+                    <img
+                      src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                     />
@@ -90,10 +93,10 @@ export default function Portfolio() {
                 <h3 className="text-2xl font-extrabold text-[#0a1128] tracking-tight mb-6">
                   {item.name}
                 </h3>
-                
+
                 <div className="flex flex-wrap gap-2 mt-auto">
                   {item.tags.map((tag, i) => (
-                    <span 
+                    <span
                       key={i}
                       className="px-3 py-1.5 bg-[#f8fafc] text-gray-600 text-xs font-bold rounded-md border border-gray-200"
                     >

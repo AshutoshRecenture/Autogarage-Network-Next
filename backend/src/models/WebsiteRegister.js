@@ -40,8 +40,11 @@ const websiteRegisterSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const WebsiteRegister = mongoose.model("WebsiteRegister", websiteRegisterSchema);
+const WebsiteRegister = mongoose.model(
+  "WebsiteRegister",
+  websiteRegisterSchema,
+);
 module.exports = WebsiteRegister;

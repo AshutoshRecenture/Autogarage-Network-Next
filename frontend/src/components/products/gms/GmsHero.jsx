@@ -17,6 +17,7 @@ export default function GmsHero() {
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaLoading, setCaptchaLoading] = useState(false);
   const [isRobot, setIsRobot] = useState(true);
+  const [formInteracted, setFormInteracted] = useState(false);
 
   const [status, setStatus] = useState({
     loading: false,
@@ -26,6 +27,9 @@ export default function GmsHero() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (!formInteracted) {
+      setFormInteracted(true);
+    }
   };
 
   const verifyCaptcha = async (e) => {
@@ -91,6 +95,7 @@ export default function GmsHero() {
         });
         setIsRobot(true);
         setCaptchaToken("");
+        setFormInteracted(false);
       } else {
         setStatus({
           loading: false,
@@ -277,26 +282,28 @@ export default function GmsHero() {
               </div>
               
               {/* Functional reCAPTCHA Mock */}
-              <div className="bg-white p-3 rounded-lg flex items-center justify-between border border-gray-200 shadow-sm mt-2">
-                <div className="flex items-center gap-3">
-                  {captchaLoading ? (
-                    <FaSyncAlt className="text-blue-500 animate-spin w-6 h-6" />
-                  ) : (
-                    <input 
-                      type="checkbox" 
-                      checked={!isRobot}
-                      onChange={verifyCaptcha}
-                      className="w-7 h-7 border-gray-300 rounded shadow-inner cursor-pointer accent-blue-600 hover:ring-2 hover:ring-blue-100 transition-all" 
-                    />
-                  )}
-                  <span className="text-[14px] font-medium text-gray-700 mt-0.5">I'm not a robot</span>
+              {formInteracted && (
+                <div className="bg-white p-3 rounded-lg flex items-center justify-between border border-gray-200 shadow-sm mt-2">
+                  <div className="flex items-center gap-3">
+                    {captchaLoading ? (
+                      <FaSyncAlt className="text-blue-500 animate-spin w-6 h-6" />
+                    ) : (
+                      <input 
+                        type="checkbox" 
+                        checked={!isRobot}
+                        onChange={verifyCaptcha}
+                        className="w-7 h-7 border-gray-300 rounded shadow-inner cursor-pointer accent-blue-600 hover:ring-2 hover:ring-blue-100 transition-all" 
+                      />
+                    )}
+                    <span className="text-[14px] font-medium text-gray-700 mt-0.5">I'm not a robot</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center opacity-80">
+                    <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA" className="w-8 h-8 mb-1 object-contain" />
+                    <div className="text-[10px] text-gray-500 font-medium leading-none">reCAPTCHA</div>
+                    <div className="text-[8px] text-gray-400 mt-1">Privacy - Terms</div>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center justify-center opacity-80">
-                  <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="reCAPTCHA" className="w-8 h-8 mb-1 object-contain" />
-                  <div className="text-[10px] text-gray-500 font-medium leading-none">reCAPTCHA</div>
-                  <div className="text-[8px] text-gray-400 mt-1">Privacy - Terms</div>
-                </div>
-              </div>
+              )}
 
               <button 
                 type="submit" 

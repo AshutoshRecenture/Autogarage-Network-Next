@@ -97,7 +97,8 @@ const submitWebsiteRegister = async (req, res) => {
       }
       return res.status(400).json({
         status: false,
-        message: "Please fill in all mandatory fields: Email, Contact Name, Phone No., and Company Number.",
+        message:
+          "Please fill in all mandatory fields: Email, Contact Name, Phone No., and Company Number.",
       });
     }
 

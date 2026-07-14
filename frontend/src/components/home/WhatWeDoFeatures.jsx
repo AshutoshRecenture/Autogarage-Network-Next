@@ -11,28 +11,33 @@ export default function WhatWeDoFeatures() {
     {
       id: 1,
       image: "/images/whatwedo-1.png",
-      description: "Create & manage websites exclusively for independent garages and workshops."
+      description:
+        "Create & manage websites exclusively for independent garages and workshops.",
     },
     {
       id: 2,
       image: "/images/whatwedo-2.png",
-      description: "Build bespoke websites that don't just look good - they drive real conversions."
+      description:
+        "Build bespoke websites that don't just look good - they drive real conversions.",
     },
     {
       id: 3,
       image: "/images/whatwedo-3.png",
-      description: "We produce real results for you, the independent garage owner."
+      description:
+        "We produce real results for you, the independent garage owner.",
     },
     {
       id: 4,
       image: "/images/whatwedo-4.png",
-      description: "Advanced booking systems integrated seamlessly into your workflow."
+      description:
+        "Advanced booking systems integrated seamlessly into your workflow.",
     },
     {
       id: 5,
       image: "/images/whatwedo-5.png",
-      description: "Comprehensive SEO analytics and performance tracking to accelerate growth."
-    }
+      description:
+        "Comprehensive SEO analytics and performance tracking to accelerate growth.",
+    },
   ];
 
   return (
@@ -59,13 +64,13 @@ export default function WhatWeDoFeatures() {
               <div className="group flex flex-col items-center cursor-pointer h-full">
                 <div className="relative w-full h-[280px] lg:h-[340px] mb-8 flex items-center justify-center transition-transform duration-500 group-hover:-translate-y-4">
                   <div className="absolute inset-0 bg-blue-50/50 rounded-full blur-3xl scale-75 opacity-0 transition-opacity duration-500 group-hover:opacity-100 z-0"></div>
-                  <img 
-                    src={feature.image} 
-                    alt="Feature showcase" 
-                    className="relative z-10 w-auto h-full max-h-full object-contain drop-shadow-[0_15px_35px_rgba(0,0,0,0.15)] transition-all duration-500 group-hover:drop-shadow-[0_25px_45px_rgba(37,99,235,0.25)]" 
+                  <img
+                    src={feature.image}
+                    alt="Feature showcase"
+                    className="relative z-10 w-auto h-full max-h-full object-contain drop-shadow-[0_15px_35px_rgba(0,0,0,0.15)] transition-all duration-500 group-hover:drop-shadow-[0_25px_45px_rgba(37,99,235,0.25)]"
                   />
                 </div>
-                
+
                 <p className="text-lg md:text-xl font-medium text-gray-700 leading-relaxed max-w-sm transition-colors duration-300 group-hover:text-[#1890d6]">
                   {feature.description}
                 </p>

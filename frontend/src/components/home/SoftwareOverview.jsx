@@ -36,7 +36,7 @@ export default function SoftwareOverview() {
           {/* Main Info Block (Spans 7 columns) */}
           <div className="lg:col-span-7 flex flex-col justify-center bg-[#0a1128] rounded-[32px] p-8 lg:p-12 shadow-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-indigo-900/40 z-0"></div>
- 
+
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl lg:text-[42px] font-extrabold text-white leading-[1.15] mb-6">
                 The Ultimate <br />
@@ -51,7 +51,7 @@ export default function SoftwareOverview() {
                 Specialists. Streamline your operations and grow your business
                 today.
               </p>
- 
+
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center gap-3 text-gray-200 font-medium text-base">
                   <FaCheckCircle className="text-blue-400" size={18} />{" "}
@@ -66,7 +66,7 @@ export default function SoftwareOverview() {
                   Automated Workflows
                 </li>
               </ul>
- 
+
               <Link
                 href="/products/gms"
                 className="group flex items-center gap-3 rounded-full bg-blue-500 px-7 py-3 text-[15px] font-bold text-white shadow-[0_8px_25px_rgba(59,130,246,0.3)] transition-all duration-300 hover:shadow-[0_12px_35px_rgba(59,130,246,0.5)] hover:-translate-y-1 w-max"
@@ -79,7 +79,7 @@ export default function SoftwareOverview() {
               </Link>
             </div>
           </div>
- 
+
           {/* Videos Block (Spans 5 columns) */}
           <div className="lg:col-span-5 flex flex-col justify-center gap-6">
             {/* Video 1 */}
@@ -94,7 +94,7 @@ export default function SoftwareOverview() {
                 Your browser does not support the video tag.
               </video>
             </div>
- 
+
             {/* Video 2 */}
             <div className="relative w-full h-[220px] sm:h-[250px] lg:h-[220px] bg-[#0a1128] rounded-[32px] overflow-hidden shadow-xl border border-gray-800 z-30">
               <video

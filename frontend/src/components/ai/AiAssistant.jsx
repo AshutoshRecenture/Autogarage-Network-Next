@@ -1,8 +1,16 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MessageSquare, Mic, ChevronLeft, Send, Square } from "lucide-react";
+import { X, MessageSquare, Mic, ChevronLeft, Send, Square, RotateCcw } from "lucide-react";
 import { useAiChat } from "@/hooks/useAiChat";
+
+const servicesList = [
+  { name: "Garage Management System", desc: "All-in-one garage workflow software" },
+  { name: "Website for Garages", desc: "Custom, SEO-optimized websites" },
+  { name: "Autotech Data", desc: "VRM lookup & technical manuals" },
+  { name: "MOT Diary", desc: "Automated MOT booking & SMS" },
+  { name: "SEO Services", desc: "Drive organic search traffic" }
+];
 
 export default function AiAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +28,9 @@ export default function AiAssistant() {
     toggleListening,
     stopAudio,
     audioRef,
+    selectedService,
+    handleServiceSelect,
+    resetChat,
   } = useAiChat(chatMode);
 
   useEffect(() => {
@@ -84,16 +95,27 @@ export default function AiAssistant() {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  stopAudio();
-                  setTimeout(() => setChatMode(null), 300);
-                }}
-                className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-300 hover:text-white"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-1">
+                {chatMode && (
+                  <button
+                    onClick={resetChat}
+                    className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-400 hover:text-blue-400"
+                    title="Start new conversation"
+                  >
+                    <RotateCcw size={17} />
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    stopAudio();
+                    setTimeout(() => setChatMode(null), 300);
+                  }}
+                  className="p-2 hover:bg-slate-800 rounded-lg transition-colors text-slate-300 hover:text-white"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             {/* Hidden Audio Element for TTS */}
@@ -170,6 +192,26 @@ export default function AiAssistant() {
                       </div>
                     </div>
                   ))}
+                  
+                  {!selectedService && messages.length <= 1 && (
+                    <div className="flex flex-col gap-2 mt-2 ml-10 animate-in fade-in slide-in-from-bottom-3 duration-500">
+                      {servicesList.map((service, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleServiceSelect(service.name)}
+                          className="w-full text-left p-3 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 rounded-xl transition-all shadow-sm group duration-300"
+                        >
+                          <div className="font-semibold text-slate-800 text-sm group-hover:text-blue-600 transition-colors">
+                            {service.name}
+                          </div>
+                          <div className="text-xs text-slate-500 mt-0.5">
+                            {service.desc}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   <div ref={messagesEndRef} />
                 </div>
                 
