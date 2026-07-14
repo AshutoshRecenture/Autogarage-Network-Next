@@ -129,12 +129,7 @@ export default function Testimonials() {
                     Website
                   </a>
 
-                  <button className="flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors group/btn">
-                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center group-hover/btn:bg-blue-100 transition-colors">
-                      <FaPlay size={10} className="text-blue-600 ml-0.5" />
-                    </div>
-                    Watch Video
-                  </button>
+
                 </div>
               </div>
             </SwiperSlide>
