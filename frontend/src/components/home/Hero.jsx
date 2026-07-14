@@ -2,10 +2,9 @@
 
 import { FaArrowRight } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 export default function Hero() {
@@ -60,8 +59,7 @@ export default function Hero() {
       </div>
 
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        navigation
+        modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
         autoplay={{ delay: 6000, disableOnInteraction: false }}
         loop={true}
@@ -110,41 +108,6 @@ export default function Hero() {
 
       {/* Swiper Custom Styles */}
       <style>{`
-        .hero-swiper .swiper-button-next,
-        .hero-swiper .swiper-button-prev {
-          display: none;
-          color: white;
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          transition: all 0.3s ease;
-        }
-        @media (min-width: 768px) {
-          .hero-swiper .swiper-button-next,
-          .hero-swiper .swiper-button-prev {
-            display: flex;
-          }
-        }
-        .hero-swiper .swiper-button-next:after,
-        .hero-swiper .swiper-button-prev:after {
-          font-size: 16px;
-          font-weight: bold;
-        }
-        .hero-swiper .swiper-button-next:hover,
-        .hero-swiper .swiper-button-prev:hover {
-          background: rgba(37, 99, 235, 0.5);
-          border-color: rgba(37, 99, 235, 0.8);
-          transform: scale(1.1);
-        }
-        .hero-swiper .swiper-button-prev {
-          left: 16px;
-        }
-        .hero-swiper .swiper-button-next {
-          right: 16px;
-        }
         .hero-swiper .swiper-pagination-bullet {
           background: transparent;
           border: 2px solid rgba(255, 255, 255, 0.4);

@@ -28,14 +28,7 @@ export default function FeaturesHero() {
           <span className="text-white font-medium">Here is our range of high-tech services that give your auto garage a professional outlook.</span>
         </p>
 
-        {/* Breadcrumbs */}
-        <div className="flex items-center justify-center gap-2 text-sm md:text-base font-medium">
-          <Link href="/" className="text-white hover:underline transition-colors">
-            Home
-          </Link>
-          <FaChevronRight className="text-[10px] text-[#1EA1F1]" />
-          <span className="text-[#1EA1F1]">Features</span>
-        </div>
+
       </div>
     </div>
   );

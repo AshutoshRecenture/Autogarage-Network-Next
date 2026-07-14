@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import {
   FaCheckCircle,
   FaArrowRight,
@@ -20,6 +21,7 @@ export default function PremiumFeatures() {
         "Our user-friendly platform provides up-to-date data covering more than 99% of vehicles on the road. This includes over 3,000 models, 130 marques, 90,000 images, and 59,000 illustrated procedures.",
       ],
       button1: "Click for further information",
+      href1: "/products/gms",
       image: "/images/dashboard-mockup.png", // Or whatwedo-1.png if preferred
       imageRight: true,
     },
@@ -28,7 +30,9 @@ export default function PremiumFeatures() {
       title: "Website Solutions for Garages",
       desc: "Digitise your offerings with our feature-rich website. Manage task allocations, revenue reporting, pricing and client data - all with just a few clicks.",
       button1: "More details",
+      href1: "/products/website",
       button2: "Free demo",
+      href2: "/contact-us",
       image: "/images/whatwedo-1.png",
       imageRight: false, // Image on left for zig-zag
     },
@@ -37,6 +41,7 @@ export default function PremiumFeatures() {
       title: "MOT Diary",
       desc: "Access a comprehensive digital MOT database through our DVLA partnership. Enable online bookings, automate reminders, streamline workflows and easily launch SMS campaigns.",
       button1: "More details",
+      href1: "/products/mot-diary",
       image: "/images/whatwedo-2.png",
       imageRight: true,
     },
@@ -45,6 +50,7 @@ export default function PremiumFeatures() {
       title: "SEO Services",
       desc: "As a leading automotive SEO provider, we help your business stand out. Our strategies drive web bookings, calls, emails and visits. This ensures a steady flow of new and returning customers.",
       button1: "More details",
+      href1: "/seo",
       image: "/images/whatwedo-3.png",
       imageRight: false,
     },
@@ -53,6 +59,7 @@ export default function PremiumFeatures() {
       title: "Mobile App for Garages",
       desc: "Simplify bookings and operations with our user-friendly mobile app for iOS and Android. The sleek interface and cutting-edge technology are designed to elevate your garage services.",
       button1: "More details",
+      href1: "/products/gms",
       image: "/images/whatwedo-4.png",
       imageRight: true,
     },
@@ -115,16 +122,16 @@ export default function PremiumFeatures() {
 
                 <div className="flex flex-wrap items-center gap-4">
                   {feature.button1 && (
-                    <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-7 rounded-xl transition-all shadow-lg shadow-blue-600/30 group hover:-translate-y-0.5">
+                    <Link href={feature.href1 || "/"} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-7 rounded-xl transition-all shadow-lg shadow-blue-600/30 group hover:-translate-y-0.5">
                       {feature.button1}
                       <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </Link>
                   )}
                   {feature.button2 && (
-                    <button className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white font-semibold py-3.5 px-7 rounded-xl transition-all shadow-lg shadow-slate-900/30 group hover:-translate-y-0.5">
+                    <Link href={feature.href2 || "/"} className="flex items-center gap-2 bg-slate-900 hover:bg-black text-white font-semibold py-3.5 px-7 rounded-xl transition-all shadow-lg shadow-slate-900/30 group hover:-translate-y-0.5">
                       {feature.button2}
                       <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </Link>
                   )}
                 </div>
               </div>

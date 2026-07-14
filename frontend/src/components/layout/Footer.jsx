@@ -142,12 +142,7 @@ export default function Footer() {
 
           </div>
 
-          {/* Bottom Bar */}
-          <div className="mt-12 pt-8 border-t border-gray-700 flex flex-col md:flex-row items-center justify-center text-center">
-            <p className="text-[13px] text-gray-500">
-              Copyright © {new Date().getFullYear()} Auto Garage Network. All Right Reserved.
-            </p>
-          </div>
+
 
         </div>
       </div>

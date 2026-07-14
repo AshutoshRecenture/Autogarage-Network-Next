@@ -31,9 +31,6 @@ const SeoBenefits = () => {
         
         {/* Left Content */}
         <div>
-          <span className="text-blue-600 font-bold uppercase tracking-wider text-xs bg-blue-50 px-3 py-1 rounded-full mb-6 inline-block">
-            Why Automotive SEO?
-          </span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8 leading-tight">
             Stop Relying on <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Passing Trade</span>

@@ -112,16 +112,28 @@ export default function WebsiteRegisterPage() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: newValue,
     }));
     if (!formInteracted) setFormInteracted(true);
 
+    // Clear the error for the changed field
     if (validationErrors[name]) {
       setValidationErrors((prev) => {
         const next = { ...prev };
         delete next[name];
+        return next;
+      });
+    }
+
+    // When noDomainName is checked, clear all domain-related errors
+    if (name === "noDomainName" && checked) {
+      setValidationErrors((prev) => {
+        const next = { ...prev };
+        delete next.domainName;
+        delete next.domainUsername;
         return next;
       });
     }
@@ -155,23 +167,51 @@ export default function WebsiteRegisterPage() {
   // Validation checking
   const validateForm = () => {
     const errors = {};
+
+    // Contact Name
     if (!formData.contactName.trim()) {
       errors.contactName = "Contact Name is required";
+    } else if (formData.contactName.trim().length < 2) {
+      errors.contactName = "Contact Name must be at least 2 characters";
     }
+
+    // Email
     if (!formData.email.trim()) {
       errors.email = "Email address is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/^[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}$/i.test(formData.email)) {
       errors.email = "Please enter a valid email address";
     }
+
+    // Phone – accepts UK formats: 07xxx, +44, 01xxx, 02xxx etc.
     if (!formData.phone.trim()) {
       errors.phone = "Phone number is required";
+    } else if (!/^(\+44\s?|0)(7\d{9}|[1-9]\d{8,9})$/.test(formData.phone.replace(/\s/g, ""))) {
+      errors.phone = "Enter a valid UK phone number (e.g. 07700 900000)";
     }
-    if (!formData.domainName.trim() && !formData.noDomainName) {
-      errors.domainName =
-        "Domain name is required unless registration is checked";
+
+    // Address
+    if (!formData.address.trim()) {
+      errors.address = "Address is required";
     }
+
+    // Domain fields (skip all if noDomainName is checked)
+    if (!formData.noDomainName) {
+      if (!formData.domainName.trim()) {
+        errors.domainName = "Domain name is required unless registration is checked";
+      }
+      if (!formData.domainUsername.trim()) {
+        errors.domainUsername = "Username is required when providing domain details";
+      }
+    }
+
+    // Company Number
     if (!formData.companyNumber.trim()) {
       errors.companyNumber = "Company Registration Number is required";
+    }
+
+    // Company Age – optional but must be a positive number if filled
+    if (formData.companyAge.trim() && (isNaN(Number(formData.companyAge)) || Number(formData.companyAge) <= 0)) {
+      errors.companyAge = "Company age must be a positive number";
     }
 
     setValidationErrors(errors);
@@ -343,23 +383,28 @@ export default function WebsiteRegisterPage() {
         }
       `}} />
       {/* Hero Banner Header */}
-      <section className="bg-[url('/images/slide-1.png')] bg-cover bg-center bg-no-repeat py-24 md:py-28 text-center select-none relative border-b border-[#0c2340]/10">
-        <div className="absolute inset-0 bg-[#0c2340]/30 mix-blend-multiply pointer-events-none" />
-        <div className="max-w-[1450px] mx-auto px-6 relative z-10 flex justify-center">
-          <h1 className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-bold tracking-wider uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            Garage Management System Requirement Gathering Form
+      <section className="bg-[url('/images/slide-1.png')] bg-cover bg-center bg-no-repeat py-32 md:py-44 text-center select-none relative border-b border-[#0c2340]/10">
+        <div className="absolute inset-0 bg-[#0c2340]/50 pointer-events-none" />
+        <div className="max-w-[1450px] mx-auto px-6 relative z-10 flex flex-col items-center gap-4">
+          <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-wide uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] leading-tight max-w-4xl">
+            Garage Management System
+            <span className="block text-blue-400">Requirement Gathering Form</span>
           </h1>
+          <p className="text-blue-100 text-sm md:text-base font-medium drop-shadow-md max-w-xl">
+            Fill in your details below and our team will be in touch shortly.
+          </p>
         </div>
       </section>
 
       {/* Announcement Header */}
-      <section className="max-w-[1450px] mx-auto px-6 py-6 text-center">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-xs sm:text-[13px] font-bold text-slate-700 leading-relaxed">
-            This is our new Garage Management System requirement gathering form. Please fill this form and use our TRIAL version absolutely FREE. That’s not all, you will also get <span className="text-[#0062ff] font-extrabold animate-blink">100 complimentary lookups</span> with the signup .
+      <section className="max-w-[1450px] mx-auto px-6 py-8 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-sm sm:text-base font-semibold text-slate-700 leading-relaxed">
+            Fill in this form to access our <strong>Garage Management System</strong> — try our TRIAL version absolutely <strong className="text-green-600">FREE</strong>. As a bonus, you'll also receive{" "}
+            <span className="text-[#0062ff] font-extrabold animate-blink">100 complimentary lookups</span>{" "}upon signup.
           </h2>
-          <p className="text-[10px] text-[#0062ff] mt-2 font-medium">
-            <span className="text-red-500 font-bold">*</span>Limited period offer.
+          <p className="text-xs text-red-500 mt-3 font-semibold tracking-wide uppercase">
+            ★ Limited period offer — don't miss out!
           </p>
         </div>
       </section>
@@ -663,7 +708,7 @@ export default function WebsiteRegisterPage() {
 
                       <div>
                         <label className="text-xs font-bold text-slate-700 mb-1.5 block">
-                          Address
+                          Address <span className="text-red-500">*</span>
                         </label>
                         <textarea
                           name="address"
@@ -671,8 +716,15 @@ export default function WebsiteRegisterPage() {
                           onChange={handleInputChange}
                           placeholder="Enter address"
                           rows="4"
-                          className="w-full px-3 py-2 text-xs border border-gray-300 outline-none rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition resize-none h-[116px]"
+                          className={`w-full px-3 py-2 text-xs border ${
+                            validationErrors.address ? "border-red-500" : "border-gray-300"
+                          } outline-none rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition resize-none h-[116px]`}
                         />
+                        {validationErrors.address && (
+                          <p className="text-red-500 text-[10px] mt-1 font-bold">
+                            {validationErrors.address}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -710,7 +762,7 @@ export default function WebsiteRegisterPage() {
                         Phone No. <span className="text-red-500">*</span>
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
@@ -791,8 +843,15 @@ export default function WebsiteRegisterPage() {
                       onChange={handleInputChange}
                       placeholder="Enter Username"
                       disabled={formData.noDomainName}
-                      className="w-full px-3 py-2 text-xs border border-gray-300 outline-none rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition disabled:bg-gray-55 disabled:text-slate-400"
+                      className={`w-full px-3 py-2 text-xs border ${
+                        validationErrors.domainUsername ? "border-red-500" : "border-gray-300"
+                      } outline-none rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition disabled:bg-gray-55 disabled:text-slate-400`}
                     />
+                    {validationErrors.domainUsername && (
+                      <p className="text-red-500 text-[10px] mt-1 font-bold">
+                        {validationErrors.domainUsername}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -1014,7 +1073,7 @@ export default function WebsiteRegisterPage() {
                       Company Number <span className="text-red-500">*</span>
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       name="companyNumber"
                       value={formData.companyNumber}
                       onChange={handleInputChange}
@@ -1112,8 +1171,15 @@ export default function WebsiteRegisterPage() {
                       value={formData.companyAge}
                       onChange={handleInputChange}
                       placeholder="Enter company age"
-                      className="w-full px-3 py-2 text-xs border border-gray-300 outline-none rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition"
+                      className={`w-full px-3 py-2 text-xs border ${
+                        validationErrors.companyAge ? "border-red-500" : "border-gray-300"
+                      } outline-none rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-800 placeholder-slate-400 transition`}
                     />
+                    {validationErrors.companyAge && (
+                      <p className="text-red-500 text-[10px] mt-1 font-bold">
+                        {validationErrors.companyAge}
+                      </p>
+                    )}
                   </div>
 
                   <div className="md:col-span-2">

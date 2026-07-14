@@ -23,14 +23,7 @@ export default function OpinionHero() {
           Opinion
         </h1>
         
-        {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 text-sm md:text-base font-medium">
-          <Link href="/" className="text-white hover:underline transition-colors">
-            Home
-          </Link>
-          <FaChevronRight className="text-[10px] text-white opacity-80" />
-          <span className="text-[#1EA1F1]">Archive by Category "Opinion"</span>
-        </div>
+
       </div>
     </div>
   );

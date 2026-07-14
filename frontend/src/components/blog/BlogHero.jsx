@@ -5,7 +5,7 @@ import { FaChevronRight } from "react-icons/fa";
 
 export default function BlogHero() {
   return (
-    <div 
+    <div
       className="text-white py-12 md:py-16 relative overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/mot-mechanic.jpg')" }}
     >
@@ -22,18 +22,6 @@ export default function BlogHero() {
             Network Blog
           </span>
         </h1>
-
-        {/* Breadcrumbs */}
-        <div className="flex items-center justify-center gap-2 text-sm font-medium opacity-90 mt-2">
-          <Link
-            href="/"
-            className="text-white hover:text-blue-300 transition-colors"
-          >
-            Home
-          </Link>
-          <FaChevronRight className="text-[10px] text-blue-400" />
-          <span className="text-blue-400">Blog</span>
-        </div>
       </div>
     </div>
   );

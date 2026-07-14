@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronDown, HelpCircle, Search, RefreshCw } from "lucide-react";
+import { ChevronDown, HelpCircle, RefreshCw } from "lucide-react";
 
 // Pre-seeded FAQs matching active database entries as a robust fallback
 const FALLBACK_FAQS = [
@@ -38,7 +38,6 @@ const FALLBACK_FAQS = [
 export default function FaqSection({ className = "" }) {
   const [faqs, setFaqs] = useState(FALLBACK_FAQS);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
@@ -74,11 +73,6 @@ export default function FaqSection({ className = "" }) {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const filteredFaqs = faqs.filter(
-    (faq) =>
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
 
   return (
     <section
@@ -99,22 +93,7 @@ export default function FaqSection({ className = "" }) {
           <div className="w-20 h-1.5 bg-[#1EA1F1] mx-auto mt-4 rounded-full"></div>
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-md mx-auto mb-6">
-          <div className="relative group">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1EA1F1] transition-colors"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="Search questions or keywords..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1EA1F1] focus:ring-2 focus:ring-blue-100/50 shadow-md shadow-slate-100/50 transition-all text-base"
-            />
-          </div>
-        </div>
+
 
         {/* Accordions */}
         <div className="space-y-4">
@@ -126,8 +105,8 @@ export default function FaqSection({ className = "" }) {
               />
               <p className="text-sm">Loading FAQs...</p>
             </div>
-          ) : filteredFaqs.length > 0 ? (
-            filteredFaqs.map((faq, index) => {
+          ) : faqs.length > 0 ? (
+            faqs.map((faq, index) => {
               const isOpen = activeIndex === index;
               return (
                 <div
@@ -174,15 +153,7 @@ export default function FaqSection({ className = "" }) {
             })
           ) : (
             <div className="text-center py-12 bg-white rounded-2xl border border-slate-100">
-              <p className="text-slate-400 text-lg">
-                No FAQs found matching "{searchQuery}".
-              </p>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="mt-4 text-sm font-semibold text-[#1EA1F1] hover:underline"
-              >
-                Clear Search
-              </button>
+              <p className="text-slate-400 text-lg">No FAQs available.</p>
             </div>
           )}
         </div>
