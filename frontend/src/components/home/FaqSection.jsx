@@ -44,7 +44,7 @@ export default function FaqSection({ className = "" }) {
     const fetchFaqs = async () => {
       try {
         const apiBase =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+          "http://localhost:5000";
         const res = await fetch(`${apiBase}/api/faqs`);
         if (res.ok) {
           const data = await res.json();

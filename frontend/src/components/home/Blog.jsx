@@ -18,24 +18,20 @@ export default function Blog() {
   useEffect(() => {
     async function fetchBlogs() {
       try {
-        const response = await fetch('http://localhost:5000/api/blogs', { cache: 'no-store' });
+        setLoading(true);
+        const blogsData = (await import("../../data/blogs.json")).default;
         
-        let result;
-        try {
-          result = await response.json();
-        } catch (e) {
-          throw new Error('Failed to parse response as JSON');
-        }
-
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || 'Failed to fetch blogs from server.');
-        }
+        const processedBlogs = blogsData.map((blog, index) => ({
+          ...blog,
+          id: blog._id || index.toString(),
+          slug: blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+        }));
         
-        // The backend returns the array in result.data
-        const fetchedBlogs = (result.data || []).slice(0, 3);
+        const fetchedBlogs = processedBlogs.slice(0, 3);
         setBlogs(fetchedBlogs);
+        setError(null);
       } catch (err) {
-        setError(err.message);
+        setError("Failed to load blog data.");
       } finally {
         setLoading(false);
       }

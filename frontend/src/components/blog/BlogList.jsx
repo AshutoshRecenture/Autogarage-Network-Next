@@ -24,71 +24,27 @@ export default function BlogList() {
   const fetchBlogs = async (page = 1) => {
     try {
       setLoading(true);
-      console.log("Fetching blogs from http://localhost:5000/api/blogs...");
-      const response = await fetch(`http://localhost:5000/api/blogs?page=${page}&limit=8`, {
-        cache: "no-store",
-      });
-      const result = await response.json();
+      const blogsData = (await import("../../data/blogs.json")).default;
 
-      console.log("API Response JSON:", result);
+      const processedBlogs = blogsData.map((blog, index) => ({
+        ...blog,
+        _id: blog._id || index.toString(),
+        slug: blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+        createdAt: blog.createdAt || blog.date
+      }));
 
-      if (result.success) {
-        console.log("Setting blogs data:", result.data);
-        setBlogs(result.data);
-        setCurrentPage(result.currentPage || 1);
-        setTotalPages(result.totalPages || 1);
-        setError(null);
-      } else if (Array.isArray(result)) {
-        console.log("Setting blogs data:", result);
-        setBlogs(result);
-        setError(null);
-      } else {
-        throw new Error(result.message || "Failed to fetch blogs");
-      }
+      const limit = 8;
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedBlogs = processedBlogs.slice(startIndex, endIndex);
+
+      setBlogs(paginatedBlogs);
+      setCurrentPage(page);
+      setTotalPages(Math.ceil(processedBlogs.length / limit));
+      setError(null);
     } catch (err) {
-      console.error("Backend fetch error:", err);
-      setError("Backend connection failed. Displaying preview data.");
-      // Fallback to mock data if backend isn't running yet
-      setBlogs([
-        {
-          _id: "1",
-          title: "How Workshop Management Systems Increase Profitability",
-          slug: "how-workshop-management-systems-increase-profitability",
-          excerpt:
-            "Discover the hidden metrics and workflows you can optimize using a digital management system in your independent garage.",
-          category: "Business Tips",
-          readingTime: 4,
-          createdAt: new Date().toISOString(),
-          author: "Alex Rivera",
-          featuredImage: "/images/dashboard-mockup.png",
-        },
-        {
-          _id: "2",
-          title: "Top 5 MOT Diary Features You Aren't Using (But Should Be)",
-          slug: "top-5-mot-diary-features",
-          excerpt:
-            "Are you fully utilizing automated SMS reminders and integrated DVSA lookups? Learn how to unlock the full potential of your MOT Diary.",
-          category: "Software Guide",
-          readingTime: 6,
-          createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-          author: "Sarah Jenkins",
-          featuredImage:
-            "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
-        },
-        {
-          _id: "3",
-          title: "Why Your Auto Garage Needs a Bespoke Website in 2026",
-          slug: "why-your-garage-needs-a-website",
-          excerpt:
-            "In a digital-first world, relying on word-of-mouth isn't enough. See how a professional web presence drives local foot traffic.",
-          category: "Marketing",
-          readingTime: 5,
-          createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-          author: "Marketing Team",
-          featuredImage: "/images/premium-features-bg.png",
-        },
-      ]);
-      setError("Backend connection failed. Displaying preview data.");
+      console.error("Error loading blogs from json:", err);
+      setError("Failed to load blog data.");
     } finally {
       setLoading(false);
     }

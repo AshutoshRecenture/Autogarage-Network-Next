@@ -5,24 +5,17 @@ import { FaChevronLeft, FaClock, FaCalendarAlt, FaUser } from "react-icons/fa";
 // Fetch blog data server-side
 async function getBlog(slug) {
   try {
-    const res = await fetch(`http://localhost:5000/api/blogs/${slug}`, { 
-      cache: 'no-store'
-      // If backend is completely unreachable, this will throw
-    });
+    const blogsData = (await import("../../../data/blogs.json")).default;
     
-    if (res.status === 404) {
-      return null;
-    }
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch from API: ${res.status}`);
-    }
+    const processedBlogs = blogsData.map((blog, index) => ({
+      ...blog,
+      _id: blog._id || index.toString(),
+      slug: blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+    }));
     
-    const result = await res.json();
-    return Array.isArray(result) ? result[0] : (result.data || result);
+    const blog = processedBlogs.find((b) => b.slug === slug);
+    return blog || null;
   } catch (err) {
-    // console.error("Error fetching blog server-side", err);
-    // Return mock data for preview purposes
     return getMockBlog(slug);
   }
 }

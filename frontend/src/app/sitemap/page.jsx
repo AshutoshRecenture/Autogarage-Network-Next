@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp, FileText, BookOpen, ArrowRight, RefreshCw } from "lucide-react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE = "http://localhost:5000";
 
 const FALLBACK_BLOGS = [
   {
@@ -34,19 +34,15 @@ export default function SitemapPage() {
     const fetchBlogs = async () => {
       setLoadingBlogs(true);
       try {
-        const response = await fetch(`${API_BASE}/api/blogs`, {
-          cache: "no-store",
-        });
-        const result = await response.json();
-        if (result.success && Array.isArray(result.data)) {
-          setBlogs(result.data);
-        } else if (Array.isArray(result)) {
-          setBlogs(result);
-        } else {
-          setBlogs(FALLBACK_BLOGS);
-        }
+        const blogsData = (await import("../../data/blogs.json")).default;
+        const processedBlogs = blogsData.map((blog, index) => ({
+          ...blog,
+          _id: blog._id || index.toString(),
+          slug: blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
+        }));
+        setBlogs(processedBlogs);
       } catch (err) {
-        console.error("Failed to fetch sitemap blogs", err);
+        console.error("Failed to load sitemap blogs", err);
         setBlogs(FALLBACK_BLOGS);
       } finally {
         setLoadingBlogs(false);
