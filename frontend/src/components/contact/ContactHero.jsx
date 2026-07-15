@@ -6,7 +6,7 @@ import { FaChevronRight } from "react-icons/fa";
 export default function ContactHero() {
   return (
     <div 
-      className="bg-slate-900 text-white py-12 md:py-20 relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      className="bg-slate-900 text-white py-20 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/latest-work-bg.jpg')" }}
     >
       {/* Dark Overlay for readability instead of blue */}

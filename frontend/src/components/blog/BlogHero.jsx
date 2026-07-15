@@ -6,7 +6,7 @@ import { FaChevronRight } from "react-icons/fa";
 export default function BlogHero() {
   return (
     <div
-      className="text-white py-12 md:py-16 relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      className="text-white py-20 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/mot-mechanic.jpg')" }}
     >
       {/* Dark Premium Blue Overlay */}
