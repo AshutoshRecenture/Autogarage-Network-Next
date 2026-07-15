@@ -6,7 +6,7 @@ import { FaChevronRight } from "react-icons/fa";
 export default function LatestWorkHero() {
   return (
     <div 
-      className="bg-[#0a192f] text-white py-10 relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      className="bg-[#0a192f] text-white py-20 md:py-24 relative overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/latest-work-bg.jpg')" }}
     >
       {/* Dark Premium Blue Overlay */}
