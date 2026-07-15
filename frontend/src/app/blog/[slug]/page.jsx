@@ -58,7 +58,8 @@ function getMockBlog(slug) {
 }
 
 export async function generateMetadata({ params }) {
-  const blog = await getBlog(params.slug);
+  const { slug } = await params;
+  const blog = await getBlog(slug);
   if (!blog) return { title: "Blog Not Found" };
   
   return {
@@ -68,7 +69,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function SingleBlogPage({ params }) {
-  const blog = await getBlog(params.slug);
+  const { slug } = await params;
+  const blog = await getBlog(slug);
 
   if (!blog) {
     return (

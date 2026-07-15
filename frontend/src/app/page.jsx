@@ -8,6 +8,7 @@ import Integrations from "@/components/home/Integrations";
 import PremiumFeatures from "@/components/home/PremiumFeatures";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import FaqSection from "@/components/home/FaqSection";
+import Blog from "@/components/home/Blog";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
       <Integrations />
       <PremiumFeatures />
       <WhyChooseUs />
+      <Blog />
       <FaqSection />
     </main>
   );

@@ -41,32 +41,8 @@ export default function FaqSection({ className = "" }) {
   const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
-    const fetchFaqs = async () => {
-      try {
-        const apiBase =
-          "http://localhost:5000";
-        const res = await fetch(`${apiBase}/api/faqs`);
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            // Sort by order asc, then by createdAt desc (as done on backend)
-            const sortedData = [...data].sort((a, b) => {
-              if ((a.order || 0) !== (b.order || 0)) {
-                return (a.order || 0) - (b.order || 0);
-              }
-              return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-            });
-            setFaqs(sortedData);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch FAQs, using fallback data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFaqs();
+    setFaqs(FALLBACK_FAQS);
+    setLoading(false);
   }, []);
 
   const toggleAccordion = (index) => {

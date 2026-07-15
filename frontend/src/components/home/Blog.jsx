@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { CldImage, CldVideoPlayer } from 'next-cloudinary';
+import Link from 'next/link';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'next-cloudinary/dist/cld-video-player.css';
@@ -169,10 +170,10 @@ export default function Blog() {
                       </p>
 
                       <div className="mt-auto">
-                        <button className="bg-[#1EA1F1] hover:bg-[#1589d1] text-white font-semibold text-[14px] py-2.5 px-6 rounded-full transition-colors flex items-center gap-2 w-max">
+                        <Link href={`/blog/${blog.slug}`} className="bg-[#1EA1F1] hover:bg-[#1589d1] text-white font-semibold text-[14px] py-2.5 px-6 rounded-full transition-colors flex items-center gap-2 w-max">
                           Read More 
                           <FaArrowRight className="text-[12px]" />
-                        </button>
+                        </Link>
                       </div>
                     </div>
 
