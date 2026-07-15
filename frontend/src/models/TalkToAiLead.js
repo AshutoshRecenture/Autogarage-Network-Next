@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const talkToAiLeadSchema = new mongoose.Schema(
   {
@@ -22,8 +22,5 @@ const talkToAiLeadSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-if (mongoose.models.TalkToAiLead) {
-  delete mongoose.models.TalkToAiLead;
-}
-const TalkToAiLead = mongoose.model("TalkToAiLead", talkToAiLeadSchema);
-export default TalkToAiLead;
+const TalkToAiLead = mongoose.models.TalkToAiLead || mongoose.model("TalkToAiLead", talkToAiLeadSchema);
+module.exports = TalkToAiLead;
