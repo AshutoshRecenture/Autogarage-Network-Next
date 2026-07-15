@@ -23,4 +23,4 @@ const talkToAiLeadSchema = new mongoose.Schema(
 );
 
 const TalkToAiLead = mongoose.models.TalkToAiLead || mongoose.model("TalkToAiLead", talkToAiLeadSchema);
-module.exports = TalkToAiLead;
+export default TalkToAiLead;

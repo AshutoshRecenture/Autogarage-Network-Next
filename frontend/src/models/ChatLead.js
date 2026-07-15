@@ -23,4 +23,4 @@ const chatLeadSchema = new mongoose.Schema(
 );
 
 const ChatLead = mongoose.models.ChatLead || mongoose.model("ChatLead", chatLeadSchema);
-module.exports = ChatLead;
+export default ChatLead;
