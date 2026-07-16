@@ -43,7 +43,7 @@ const HOURS_LIST = [
 ];
 const MINUTE_LIST = ["00", "15", "30", "45"];
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "";
 
 export default function WebsiteRegisterPage() {
   const [formData, setFormData] = useState({

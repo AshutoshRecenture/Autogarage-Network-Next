@@ -61,7 +61,8 @@ export default function Hero() {
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
-        autoplay={{ delay: 6000, disableOnInteraction: false }}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        speed={600}
         loop={true}
         className="hero-swiper z-10"
       >

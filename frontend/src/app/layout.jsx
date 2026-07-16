@@ -17,13 +17,16 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Auto Garage Network | Garage Management Software & Websites",
-  description: "Advanced website design, SEO, and Garage Management Software tailored exclusively for premium independent garages, MOT centres, and workshops in the UK.",
+  description:
+    "Advanced website design, SEO, and Garage Management Software tailored exclusively for premium independent garages, MOT centres, and workshops in the UK.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Navbar />
 
         {children}

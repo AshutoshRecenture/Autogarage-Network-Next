@@ -29,30 +29,29 @@ export function useAiChat(chatMode, captchaToken) {
     }
     
     try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
-
-      if (!res.ok) {
-        if (startListeningAfter && chatMode === 'voice') {
-           try { recognitionRef.current?.start(); setIsListening(true); } catch(e){}
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice = voices.find(v => 
+          v.name.toLowerCase().includes('female') || 
+          v.name.toLowerCase().includes('zira') || 
+          v.name.toLowerCase().includes('samantha') ||
+          v.name.toLowerCase().includes('victoria')
+        );
+        
+        if (femaleVoice) {
+          utterance.voice = femaleVoice;
         }
-        return;
-      }
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      if (audioRef.current) {
-        audioRef.current.src = url;
-        audioRef.current.play().catch(() => {});
-        setIsPlaying(true);
-
-        audioRef.current.onended = () => {
+        
+        utterance.onstart = () => {
+          setIsPlaying(true);
+        };
+        
+        utterance.onend = () => {
           setIsPlaying(false);
-          URL.revokeObjectURL(url);
           if (startListeningAfter && chatMode === 'voice') {
             try {
               recognitionRef.current?.start();
@@ -60,6 +59,16 @@ export function useAiChat(chatMode, captchaToken) {
             } catch (err) {}
           }
         };
+        
+        utterance.onerror = (e) => {
+          console.error("Speech synthesis error", e);
+          setIsPlaying(false);
+          if (startListeningAfter && chatMode === 'voice') {
+            try { recognitionRef.current?.start(); setIsListening(true); } catch(err){}
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
       }
     } catch (error) {
       if (startListeningAfter && chatMode === 'voice') {
@@ -69,11 +78,14 @@ export function useAiChat(chatMode, captchaToken) {
   };
 
   const stopAudio = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      setIsPlaying(false);
     }
+    setIsPlaying(false);
   };
 
   const sendMessage = async (textToSubmit) => {

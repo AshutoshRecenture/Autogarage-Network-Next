@@ -22,7 +22,6 @@ export default function Home() {
       <Integrations />
       <PremiumFeatures />
       <WhyChooseUs />
-      <Blog />
       <FaqSection />
     </main>
   );

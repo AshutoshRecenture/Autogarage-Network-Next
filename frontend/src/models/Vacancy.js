@@ -14,6 +14,14 @@ const vacancySchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    requirements: {
+      type: [String],
+      default: [],
+    },
+    jobDescription: {
+      type: [String],
+      default: [],
+    },
     isActive: {
       type: Boolean,
       default: true,

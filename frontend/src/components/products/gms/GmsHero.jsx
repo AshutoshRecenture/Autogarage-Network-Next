@@ -53,8 +53,7 @@ export default function GmsHero() {
     setStatus({ loading: true, error: null, success: false });
 
     try {
-      const apiBase = "http://localhost:5000";
-      const res = await fetch(`${apiBase}/api/bookings`, {
+      const res = await fetch(`/api/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

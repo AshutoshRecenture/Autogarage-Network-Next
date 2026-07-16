@@ -73,10 +73,10 @@ export default function Footer() {
               </h3>
               <ul className="flex flex-col gap-2">
                 {[
-                  { name: "Car Workshop", href: "#" },
-                  { name: "Car Traders", href: "#" },
-                  { name: "MOT Centres", href: "#" },
-                  { name: "Automotive", href: "#" },
+                  { name: "Car Workshop", href: "/car-workshop" },
+                  { name: "Car Traders", href: "/car-traders" },
+                  { name: "MOT Centres", href: "/mot-centres" },
+                  { name: "Automotive", href: "/automotive" },
                 ].map((link, idx) => (
                   <li key={idx}>
                     <Link
@@ -148,7 +148,7 @@ export default function Footer() {
                   </a>
                   <a
                     href="mailto:info@autogaragenetwork.com"
-                    className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors break-words"
+                    className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors whitespace-nowrap"
                   >
                     info@autogaragenetwork.com
                   </a>
@@ -166,7 +166,7 @@ export default function Footer() {
                   </a>
                   <a
                     href="mailto:jatindersingh@autogaragenetwork.com"
-                    className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors break-words"
+                    className="block text-[14px] text-gray-400 hover:text-[#1EA1F1] transition-colors whitespace-nowrap"
                   >
                     jatindersingh@autogaragenetwork.com
                   </a>

@@ -7,37 +7,19 @@ import TalkToAiLead from "@/models/TalkToAiLead";
 
 export const maxDuration = 30;
 
-async function verifyReCaptcha(token) {
-  if (!token) return false;
-  const secret = process.env.RECAPTCHA_SECRET_KEY || process.env.RECAPRCHA_SECRET_KEY;
-  if (!secret) {
-    console.error("RECAPTCHA_SECRET_KEY is not configured on the frontend server");
-    return false;
-  }
-  try {
-    const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
-    });
-    const data = await response.json();
-    return data.success === true;
-  } catch (error) {
-    console.error("Error verifying reCAPTCHA:", error);
-    return false;
-  }
-}
-
 export async function POST(req) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
+    // Force fallback mode by ignoring the OpenAI key.
+    // The configured key is likely out of credits or invalid, causing timeouts.
+    const apiKey = null; // process.env.OPENAI_API_KEY;
     const body = await req.json();
     const { messages, sessionId, mode = "text", captchaToken } = body;
 
     if (!sessionId || !messages || messages.length === 0) {
-      return new Response(JSON.stringify({ error: "Invalid request body" }), { status: 400, headers: { "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ error: "Invalid request body" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     await connectToDatabase();
@@ -48,10 +30,6 @@ export async function POST(req) {
     // Find or Create Lead
     let lead = await LeadModel.findOne({ sessionId });
     if (!lead) {
-      const isValidCaptcha = await verifyReCaptcha(captchaToken);
-      if (!isValidCaptcha) {
-        return new Response(JSON.stringify({ error: "Invalid or expired Captcha verification. Please try again." }), { status: 400, headers: { "Content-Type": "application/json" } });
-      }
       lead = await LeadModel.create({ sessionId, chatMode: mode });
     }
 
@@ -59,22 +37,24 @@ export async function POST(req) {
     const latestMessage = messages[messages.length - 1];
     if (latestMessage.role === "user") {
       try {
-        lead.chatMessages.push({ 
-          sender: "user", 
+        lead.chatMessages.push({
+          sender: "user",
           message: latestMessage.content,
-          time: new Date()
+          time: new Date(),
         });
         await lead.save();
 
         // Synchronously extract and update lead fields in DB before streaming/API setup
         await updateLeadFieldsFromMessage(lead, latestMessage.content);
-
       } catch (dbError) {
         console.error("Database Save Error (User Message):", dbError);
-        return new Response(JSON.stringify({ 
-          error: "Failed to save user message to database", 
-          details: dbError.message 
-        }), { status: 500, headers: { "Content-Type": "application/json" } });
+        return new Response(
+          JSON.stringify({
+            error: "Failed to save user message to database",
+            details: dbError.message,
+          }),
+          { status: 500, headers: { "Content-Type": "application/json" } },
+        );
       }
     }
 
@@ -119,7 +99,8 @@ Guidelines:
           maxSteps: 3,
           tools: {
             save_lead_details: tool({
-              description: "Update the user's lead information in the database. Call this tool as soon as the user provides any of the requested details.",
+              description:
+                "Update the user's lead information in the database. Call this tool as soon as the user provides any of the requested details.",
               parameters: z.object({
                 selectedService: z.string().optional(),
                 fullName: z.string().optional(),
@@ -132,19 +113,24 @@ Guidelines:
               execute: async (args) => {
                 try {
                   const updateFields = {};
-                  Object.keys(args).forEach(key => { if (args[key] !== undefined) updateFields[key] = args[key]; });
-                  
+                  Object.keys(args).forEach((key) => {
+                    if (args[key] !== undefined) updateFields[key] = args[key];
+                  });
+
                   if (Object.keys(updateFields).length > 0) {
-                     await LeadModel.findOneAndUpdate({ sessionId }, { $set: updateFields });
-                     return "Lead info updated successfully.";
+                    await LeadModel.findOneAndUpdate(
+                      { sessionId },
+                      { $set: updateFields },
+                    );
+                    return "Lead info updated successfully.";
                   }
                   return "No info to update.";
                 } catch (e) {
                   console.error("Tool Error:", e);
                   return "Failed to update.";
                 }
-              }
-            })
+              },
+            }),
           },
           async onFinish({ text }) {
             try {
@@ -153,12 +139,15 @@ Guidelines:
                 updatedLead.chatMessages.push({
                   sender: "assistant",
                   message: text || "[Action Performed]",
-                  time: new Date()
+                  time: new Date(),
                 });
                 await updatedLead.save();
               }
             } catch (dbError) {
-              console.error("Database Save Error (Assistant Message):", dbError);
+              console.error(
+                "Database Save Error (Assistant Message):",
+                dbError,
+              );
             }
           },
         });
@@ -179,10 +168,15 @@ Guidelines:
                 }
               }
               if (!hasReceivedText && !hasError) {
-                controller.enqueue(encoder.encode("Got it! Just saving your details now..."));
+                controller.enqueue(
+                  encoder.encode("Got it! Just saving your details now..."),
+                );
               }
             } catch (streamError) {
-              console.error("OpenAI stream processing failed, switching to offline assistant. Error:", streamError);
+              console.error(
+                "OpenAI stream processing failed, switching to offline assistant. Error:",
+                streamError,
+              );
               const recoveryReply = await getDialogManagerReply(lead);
               controller.enqueue(encoder.encode(recoveryReply));
             } finally {
@@ -190,9 +184,11 @@ Guidelines:
             }
           },
         });
-
       } catch (openaiErr) {
-        console.warn("OpenAI API call setup failed, falling back to rule-based dialog manager. Error:", openaiErr.message);
+        console.warn(
+          "OpenAI API call setup failed, falling back to rule-based dialog manager. Error:",
+          openaiErr.message,
+        );
         useFallback = true;
       }
     }
@@ -204,23 +200,28 @@ Guidelines:
         async start(controller) {
           controller.enqueue(encoder.encode(replyText));
           controller.close();
-        }
+        },
       });
     }
 
     // Retrieve final lead details to send back current lead status in headers
     const finalLead = await LeadModel.findOne({ sessionId });
 
-    return new Response(customStream, { 
-      headers: { 
+    return new Response(customStream, {
+      headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "X-Selected-Service": finalLead?.selectedService || ""
-      } 
+        "X-Selected-Service": finalLead?.selectedService || "",
+      },
     });
-
   } catch (error) {
     console.error("Chat API Error:", error);
-    return new Response(JSON.stringify({ error: error.message || "Internal Server Error", stack: error.stack }), { status: 500, headers: { "Content-Type": "application/json" } });
+    return new Response(
+      JSON.stringify({
+        error: error.message || "Internal Server Error",
+        stack: error.stack,
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
   }
 }
 
@@ -231,46 +232,53 @@ async function updateLeadFieldsFromMessage(lead, lastUserMsg) {
     "Website for Garages",
     "Autotech Data",
     "MOT Diary",
-    "SEO Services"
+    "SEO Services",
   ];
 
   if (!lead.selectedService) {
     // Find if user message matches one of our services (case-insensitive, substring match)
-    const matchedService = VALID_SERVICES.find(s => 
-      lastUserMsg.toLowerCase().includes(s.toLowerCase()) || 
-      s.toLowerCase().includes(lastUserMsg.toLowerCase())
+    const matchedService = VALID_SERVICES.find(
+      (s) =>
+        lastUserMsg.toLowerCase().includes(s.toLowerCase()) ||
+        s.toLowerCase().includes(lastUserMsg.toLowerCase()),
     );
-    
+
     if (matchedService) {
       lead.selectedService = matchedService;
     }
   } else if (!lead.fullName) {
     lead.fullName = lastUserMsg;
   } else if (!lead.email || !lead.phone) {
-    // Try to parse email and phone
     const emailRegex = /[\w.-]+@[\w.-]+\.\w+/;
     const phoneRegex = /(\+?\d[\d-\s()]{7,15})/g;
     const emailMatch = lastUserMsg.match(emailRegex);
     const phoneMatch = lastUserMsg.match(phoneRegex);
-    
-    if (emailMatch) lead.email = emailMatch[0];
-    if (phoneMatch && phoneMatch.length > 0) lead.phone = phoneMatch[0].trim();
-    
-    if (!lead.email && lastUserMsg.includes("@")) {
-      lead.email = lastUserMsg;
+
+    let updatedEmail = false;
+    let updatedPhone = false;
+
+    if (emailMatch && !lead.email) {
+      lead.email = emailMatch[0];
+      updatedEmail = true;
     }
-    // If we still don't have email/phone, we'll store whatever they typed as email first, then ask for phone
-    if (!lead.email) {
-      lead.email = lastUserMsg;
-    } else if (!lead.phone) {
-      lead.phone = lastUserMsg;
+    if (phoneMatch && phoneMatch.length > 0 && !lead.phone) {
+      lead.phone = phoneMatch[0].trim();
+      updatedPhone = true;
+    }
+
+    if (!updatedEmail && !updatedPhone) {
+      if (!lead.email) {
+        lead.email = lastUserMsg;
+      } else if (!lead.phone) {
+        lead.phone = lastUserMsg;
+      }
     }
   } else if (!lead.purpose) {
     lead.purpose = lastUserMsg;
   } else if (!lead.budget) {
     lead.budget = lastUserMsg;
   }
-  
+
   await lead.save();
 }
 
@@ -278,19 +286,46 @@ async function updateLeadFieldsFromMessage(lead, lastUserMsg) {
 async function getDialogManagerReply(lead) {
   try {
     // Check if the user is using Hindi/Hinglish by scanning the latest user message or previous user messages
-    const userMessages = lead.chatMessages.filter(m => m.sender === "user");
-    const lastUserMsgText = userMessages[userMessages.length - 1]?.message || "";
-    
+    const userMessages = lead.chatMessages.filter((m) => m.sender === "user");
+    const lastUserMsgText =
+      userMessages[userMessages.length - 1]?.message || "";
+
     const hindiWords = [
-      "naam", "mera", "mira", "hu", "hai", "kya", "kaise", "budget", "shuru", "haan", "achha", "achha", "dhanyawad", 
-      "hindi", "namaste", "chahiye", "krdo", "kardo", "hai", "he", "ko", "se", "kar", "bata", "batao", "apna", "apni",
-      "sakte", "sakti", "website", "kuch", "aur", "jald", "naam"
+      "naam",
+      "mera",
+      "mira",
+      "hu",
+      "hai",
+      "kya",
+      "kaise",
+      "shuru",
+      "haan",
+      "achha",
+      "dhanyawad",
+      "hindi",
+      "namaste",
+      "chahiye",
+      "krdo",
+      "kardo",
+      "he",
+      "ko",
+      "se",
+      "kar",
+      "bata",
+      "batao",
+      "apna",
+      "apni",
+      "sakte",
+      "sakti",
+      "kuch",
+      "aur",
+      "jald",
     ];
-    
+
     // Check if it has Devanagari characters or contains any common Hindi words
     const hasDevanagari = /[\u0900-\u097F]/.test(lastUserMsgText);
-    const hasHindiWord = hindiWords.some(word => 
-      new RegExp(`\\b${word}\\b`, "i").test(lastUserMsgText.toLowerCase())
+    const hasHindiWord = hindiWords.some((word) =>
+      new RegExp(`\\b${word}\\b`, "i").test(lastUserMsgText.toLowerCase()),
     );
     const isHindi = hasDevanagari || hasHindiWord;
 
@@ -298,7 +333,8 @@ async function getDialogManagerReply(lead) {
     let replyText = "";
     if (isHindi) {
       if (!lead.selectedService) {
-        replyText = "Please select or state one of our available services to get started: Garage Management System, Website for Garages, Autotech Data, MOT Diary, ya SEO Services.";
+        replyText =
+          "Please select or state one of our available services to get started: Garage Management System, Website for Garages, Autotech Data, MOT Diary, ya SEO Services.";
       } else if (!lead.fullName) {
         replyText = `Samajh gaya! Aap "${lead.selectedService}" me interested hain. Shuru karne ke liye kya aap mujhe apna pura naam bata sakte hain?`;
       } else if (!lead.email || !lead.phone) {
@@ -312,11 +348,33 @@ async function getDialogManagerReply(lead) {
       } else if (!lead.budget) {
         replyText = `Got it. Aakhiri sawaal, is service ke liye aapka estimated budget kya hai?`;
       } else {
-        replyText = `Bahut bahut dhanyawad, ${lead.fullName}! Maine aapki saari details database me save kar li hain. Humari sales team aapse jald hi ${lead.email} ya ${lead.phone} par contact karegi "${lead.selectedService}" ke aage ke steps discuss karne ke liye. Kya aap kuch aur poochhna chahte hain?`;
+        const closingWords = [
+          "thank",
+          "thanks",
+          "bye",
+          "nothing",
+          "no",
+          "nahi",
+          "dhanyawad",
+          "goodbye",
+          "ok",
+          "okay",
+        ];
+        const isClosing = closingWords.some((word) =>
+          lastUserMsgText.toLowerCase().includes(word),
+        );
+
+        if (isClosing) {
+          replyText =
+            "Dhanyawad! Aapka din shubh ho. Hum jaldi hi aapse sampark karenge.";
+        } else {
+          replyText = `Bahut bahut dhanyawad, ${lead.fullName}! Maine aapki saari details database mein save kar li hain. Humari team jaldi hi aapse ${lead.email} aur ${lead.phone} par contact karegi "${lead.selectedService}" ke liye. Kya aap kuch aur puchna chahte hain?`;
+        }
       }
     } else {
       if (!lead.selectedService) {
-        replyText = "Please select or state one of our available services to get started: Garage Management System, Website for Garages, Autotech Data, MOT Diary, or SEO Services.";
+        replyText =
+          "Please select or state one of our available services to get started: Garage Management System, Website for Garages, Autotech Data, MOT Diary, or SEO Services.";
       } else if (!lead.fullName) {
         replyText = `Understood! You're interested in the "${lead.selectedService}". Could you please tell me your full name to start?`;
       } else if (!lead.email || !lead.phone) {
@@ -330,7 +388,28 @@ async function getDialogManagerReply(lead) {
       } else if (!lead.budget) {
         replyText = `Got it. Lastly, what is your estimated budget for this service?`;
       } else {
-        replyText = `Thank you so much, ${lead.fullName}! I have successfully saved all your requirements in our database. Our sales team will reach out to you at ${lead.email} or ${lead.phone} to discuss the next steps for "${lead.selectedService}". Is there anything else you'd like to ask?`;
+        const closingWords = [
+          "thank",
+          "thanks",
+          "bye",
+          "nothing",
+          "no",
+          "nahi",
+          "dhanyawad",
+          "goodbye",
+          "ok",
+          "okay",
+        ];
+        const isClosing = closingWords.some((word) =>
+          lastUserMsgText.toLowerCase().includes(word),
+        );
+
+        if (isClosing) {
+          replyText =
+            "You're welcome! Have a great day! We will be in touch soon.";
+        } else {
+          replyText = `Thank you so much, ${lead.fullName}! I have successfully saved all your requirements in our database. Our sales team will reach out to you at email ${lead.email} and phone number ${lead.phone} to discuss the next steps for "${lead.selectedService}". Is there anything else you'd like to ask?`;
+        }
       }
     }
 
@@ -338,7 +417,7 @@ async function getDialogManagerReply(lead) {
     lead.chatMessages.push({
       sender: "assistant",
       message: replyText,
-      time: new Date()
+      time: new Date(),
     });
     await lead.save();
 

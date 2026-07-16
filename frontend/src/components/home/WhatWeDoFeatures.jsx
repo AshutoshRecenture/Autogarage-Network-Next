@@ -50,7 +50,8 @@ export default function WhatWeDoFeatures() {
         <Swiper
           modules={[Pagination, Autoplay]}
           pagination={{ clickable: true }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          autoplay={{ delay: 2500, disableOnInteraction: false }}
+          speed={600}
           loop={true}
           breakpoints={{
             320: { slidesPerView: 1, spaceBetween: 30 },

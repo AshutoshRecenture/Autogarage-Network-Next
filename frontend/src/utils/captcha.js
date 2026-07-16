@@ -29,6 +29,12 @@ export const createCaptchaToken = () => {
 export const verifyCaptchaToken = async (token) => {
   if (!token) return false;
   
+  // Bypass reCAPTCHA in development environment to avoid localhost domain restrictions
+  if (process.env.NODE_ENV === "development") {
+    console.log("Bypassing reCAPTCHA verification in development mode.");
+    return true;
+  }
+
   const secret = process.env.RECAPTCHA_SECRET_KEY || process.env.RECAPRCHA_SECRET_KEY;
   if (!secret) {
     console.error("reCAPTCHA secret key is missing in environment variables.");
